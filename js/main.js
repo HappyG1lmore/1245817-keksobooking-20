@@ -23,9 +23,8 @@ var MIN_GUESTS = 1;
 var MAX_GUESTS = 6;
 var AMOUNT_ADS = 8;
 
-var PIN_WIDTH = 62;
-var PIN_HEIGHT = 62;
-var PIN_POINTER_HEIGHT = 22;
+var PIN_WIDTH = 40;
+var PIN_HEIGHT = 40;
 
 // случайная цифра
 var getRandomIntFromRange = function (min, max) {
@@ -91,7 +90,7 @@ var createPin = function (pinData) {
   var avatar = template.querySelector('img');
 
   var pinLeft = pinData.location.x - (PIN_WIDTH / 2);
-  var pinTop = pinData.location.y - (PIN_HEIGHT + PIN_POINTER_HEIGHT);
+  var pinTop = pinData.location.y - (PIN_HEIGHT);
 
   pin.style.left = pinLeft + 'px';
   pin.style.top = pinTop + 'px';
@@ -113,26 +112,3 @@ var renderPins = function (pinsData) {
 
 var announcements = createAnnouncements();
 renderPins(announcements);
-
-
-// Похожие объявления
-
-/* var card = document.querySelector('#card').content.querySelector('.map__card');
-
-for (var i = 0; i < createAnnouncements.length; i++) {
-  var announcElement = card.cloneNode(true);
-
-  // в аватаре неправильно, нужно же значение атрибута src менять, а не текстКонтент
-  announcElement.querySelector('popup__avatar').textContent = createAnnouncements[i].author.avatar;
-  announcElement.querySelector('popup__title').textContent = createAnnouncements[i].offer.title;
-  announcElement.querySelector('popup__text--address').textContent = createAnnouncements[i].offer.address;
-  announcElement.querySelector('popup__text--price').textContent = createAnnouncements[i].offer.price;
-  announcElement.querySelector('popup__type').textContent = createAnnouncements[i].offer.type;
-
-  announcElement.querySelector('popup__text--capacity').textContent = createAnnouncements[i].offer.rooms + ' комнаты для' + createAnnouncements[i].offer.guests + ' гостей';
-  announcElement.querySelector('popup__text--time').textContent = 'Заезд после ' + createAnnouncements[i].offer.checkin + ', выезд до ' + createAnnouncements[i].offer.checkout;
-  announcElement.querySelector('popup__features').textContent = createAnnouncements[i].offer.features;
-  announcElement.querySelector('popup__description').textContent = createAnnouncements[i].offer.description;
-  announcElement.querySelector('popup__photo').textContent = createAnnouncements[i].offer.photos;
-}
-*/
