@@ -23,8 +23,57 @@ var MIN_GUESTS = 1;
 var MAX_GUESTS = 6;
 var AMOUNT_ADS = 8;
 
-var PIN_WIDTH = 40;
-var PIN_HEIGHT = 40;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+var DEFAULT_PIN_WIDTH = 65;
+// Не понял как посчитато точно. Там внизу этот указатель еще к 65 прибавить нужно, взял 20
+var DEFAULT_PIN_HEIGHT = 85;
+
+var fieldsets = document.querySelectorAll('fieldset');
+var mapMainEl = document.querySelector('.map__pin--main');
+var map = document.querySelector('.map');
+var adForm = document.querySelector('.ad-form');
+var mapFilters = document.querySelector('.map__filters');
+
+var address = document.querySelector('#address');
+
+// ТЕСТИРУЮ ТУТ, ПРОВЕРЯЮ ГИПОТЕЗЫ, ПОТОМ УДАЛЮ)------------------------
+var addd = document.querySelector('.ad-form__element');
+document.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    console.log(addd);
+  }
+});
+// -----------------------------------------------------------------------
+
+// функция, добавляет disabled
+var addDisabled = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    array[i].disabled = true;
+  }
+  return array;
+};
+
+// функция, удаляет disabled
+var removeDisabled = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    array[i].disabled = false;
+  }
+  return array;
+};
+
+// функция, делает форму активной
+var makeFormActive = function () {
+  map.classList.remove('map--faded');
+  mapFilters.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  removeDisabled(fieldsets);
+};
+
+// функция заполнения поля адреса
+var getAddressValue = function (array) {
+  address.value = (array.location.x - (DEFAULT_PIN_WIDTH / 2)) + ', ' + array.location.y - (DEFAULT_PIN_HEIGHT);
+};
 
 // случайная цифра
 var getRandomIntFromRange = function (min, max) {
@@ -44,6 +93,28 @@ var getRandomLengthArray = function (array) {
   }
   return tempArray;
 };
+
+// вызвал функцию добавления атрибута disabled
+addDisabled(fieldsets);
+
+// заполнил поле адреса
+address.value = (570 - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (375 - (DEFAULT_PIN_HEIGHT));
+
+// обработчик по клику (левая кнопка мыши так обозначается?)
+// Адрес (координаты) пока вписал в поле из случайного массив, потом изменю
+mapMainEl.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    makeFormActive();
+    getAddressValue(announcements);
+  }
+});
+
+mapMainEl.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === 13) {
+    makeFormActive();
+    getAddressValue(announcements);
+  }
+});
 
 // массив похожих объявлений
 var createAnnouncements = function () {
@@ -76,8 +147,9 @@ var createAnnouncements = function () {
   return result;
 };
 
+var announcements = createAnnouncements();
+
 // удаляем класс map
-var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
 // создание пина + рендер
@@ -110,5 +182,4 @@ var renderPins = function (pinsData) {
   pinsMap.appendChild(fragment);
 };
 
-var announcements = createAnnouncements();
 renderPins(announcements);
