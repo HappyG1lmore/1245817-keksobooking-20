@@ -26,53 +26,78 @@ var AMOUNT_ADS = 8;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var DEFAULT_PIN_WIDTH = 65;
-// Не понял как посчитато точно. Там внизу этот указатель еще к 65 прибавить нужно, взял 20
-var DEFAULT_PIN_HEIGHT = 85;
+var DEFAULT_PIN_HEIGHT = 65;
 
-var fieldsets = document.querySelectorAll('fieldset');
+var DEFAULT_PIN_LEFT = 570;
+var DEFAULT_PIN_TOP = 375;
+
 var mapMainEl = document.querySelector('.map__pin--main');
 var map = document.querySelector('.map');
-var adForm = document.querySelector('.ad-form');
-var mapFilters = document.querySelector('.map__filters');
+var formBasic = document.querySelector('.ad-form');
+var fieldsets = formBasic.querySelectorAll('fieldset');
 
 var address = document.querySelector('#address');
+
+var rooms = formBasic.querySelector('#room_number');
+var capacity = formBasic.querySelector('#capacity');
 
 // ТЕСТИРУЮ ТУТ, ПРОВЕРЯЮ ГИПОТЕЗЫ, ПОТОМ УДАЛЮ)------------------------
 var addd = document.querySelector('.ad-form__element');
 document.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
-    console.log(addd);
+    console.log();
   }
 });
 // -----------------------------------------------------------------------
 
-// функция, добавляет disabled
-var addDisabled = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    array[i].disabled = true;
-  }
-  return array;
+// функции, активирует и деактивирует форму
+var enableForm = function () {
+  fieldsets.forEach(function (fieldset) {
+    fieldset.disabled = false;
+  });
 };
 
-// функция, удаляет disabled
-var removeDisabled = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    array[i].disabled = false;
-  }
-  return array;
+var disabledForm = function () {
+  fieldsets.forEach(function (fieldset) {
+    fieldset.disabled = true;
+  });
 };
 
-// функция, делает форму активной
-var makeFormActive = function () {
+// Футкция, адрес первого дефолтного пина (элипс)
+var setEnAdress = function () {
+  address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - (DEFAULT_PIN_HEIGHT / 2));
+};
+
+// Функция, поле адреса при активации формы
+var setActiveAdress = function () {
+  address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - DEFAULT_PIN_HEIGHT);
+};
+
+// функция, делает страницу активной
+var makeAppActive = function () {
   map.classList.remove('map--faded');
-  mapFilters.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  removeDisabled(fieldsets);
+  formBasic.classList.remove('ad-form--disabled');
+  enableForm();
 };
 
 // функция заполнения поля адреса
 var getAddressValue = function (array) {
   address.value = (array.location.x - (DEFAULT_PIN_WIDTH / 2)) + ', ' + array.location.y - (DEFAULT_PIN_HEIGHT);
+};
+
+// функция валидации комнат и количества гостей
+var checkValidityRooms = function (numberOfRooms, numberOfGuests) {
+  if (numberOfRooms.value === '1' && numberOfGuests.value !== '1') {
+    capacity.setCustomValidity('1 комната только для 1-го гостя');
+  } else if (numberOfRooms.value === '2' && (numberOfGuests.value === '3' || numberOfGuests.value === '0')) {
+    capacity.setCustomValidity('2 комнаты для 1-го или 2-ух гостей');
+  } else if (numberOfRooms.value === '3' && numberOfGuests.value === '0') {
+    capacity.setCustomValidity('3 комнаты для 1-го, 2-ух или 3-ех гостей');
+  } else if (numberOfRooms.value === '100' && numberOfGuests.value !== '0') {
+    capacity.setCustomValidity('Это помещение не для гостей');
+  } else {
+    capacity.setCustomValidity('');
+  }
 };
 
 // случайная цифра
@@ -95,23 +120,30 @@ var getRandomLengthArray = function (array) {
 };
 
 // вызвал функцию добавления атрибута disabled
-addDisabled(fieldsets);
+disabledForm();
 
 // заполнил поле адреса
-address.value = (570 - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (375 - (DEFAULT_PIN_HEIGHT));
+setEnAdress();
 
-// обработчик по клику (левая кнопка мыши так обозначается?)
+// Слушаю форму
+formBasic.addEventListener('change', function (evt) {
+  if (evt.target === rooms || evt.target === capacity) {
+    checkValidityRooms(rooms, capacity);
+  }
+  formBasic.reportValidity('');
+});
+
 // Адрес (координаты) пока вписал в поле из случайного массив, потом изменю
 mapMainEl.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
-    makeFormActive();
-    getAddressValue(announcements);
+    makeAppActive();
+    setActiveAdress();
   }
 });
 
 mapMainEl.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 13) {
-    makeFormActive();
+    makeAppActive();
     getAddressValue(announcements);
   }
 });
@@ -149,8 +181,6 @@ var createAnnouncements = function () {
 
 var announcements = createAnnouncements();
 
-// удаляем класс map
-map.classList.remove('map--faded');
 
 // создание пина + рендер
 var pinTemplate = document.querySelector('#pin');
