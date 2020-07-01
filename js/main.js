@@ -31,15 +31,15 @@ var DEFAULT_PIN_HEIGHT = 65;
 var DEFAULT_PIN_LEFT = 570;
 var DEFAULT_PIN_TOP = 375;
 
-var mapMainEl = document.querySelector('.map__pin--main');
+var mapMain = document.querySelector('.map__pin--main');
 var map = document.querySelector('.map');
-var formBasic = document.querySelector('.ad-form');
-var fieldsets = formBasic.querySelectorAll('fieldset');
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
 
-var address = document.querySelector('#address');
+var address = adForm.querySelector('#address');
 
-var rooms = formBasic.querySelector('#room_number');
-var capacity = formBasic.querySelector('#capacity');
+var rooms = adForm.querySelector('#room_number');
+var capacity = adForm.querySelector('#capacity');
 
 // ТЕСТИРУЮ ТУТ, ПРОВЕРЯЮ ГИПОТЕЗЫ, ПОТОМ УДАЛЮ)------------------------
 var addd = document.querySelector('.ad-form__element');
@@ -51,20 +51,20 @@ document.addEventListener('mousedown', function (evt) {
 // -----------------------------------------------------------------------
 
 // функции, активирует и деактивирует форму
-var enableForm = function () {
-  fieldsets.forEach(function (fieldset) {
+var enableAdForm = function () {
+  adFormFieldsets.forEach(function (fieldset) {
     fieldset.disabled = false;
   });
 };
 
-var disabledForm = function () {
-  fieldsets.forEach(function (fieldset) {
+var disableAdForm = function () {
+  adFormFieldsets.forEach(function (fieldset) {
     fieldset.disabled = true;
   });
 };
 
 // Футкция, адрес первого дефолтного пина (элипс)
-var setEnAdress = function () {
+var setInitialAddress = function () {
   address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - (DEFAULT_PIN_HEIGHT / 2));
 };
 
@@ -76,28 +76,23 @@ var setActiveAdress = function () {
 // функция, делает страницу активной
 var makeAppActive = function () {
   map.classList.remove('map--faded');
-  formBasic.classList.remove('ad-form--disabled');
-  enableForm();
-};
-
-// функция заполнения поля адреса
-var getAddressValue = function (array) {
-  address.value = (array.location.x - (DEFAULT_PIN_WIDTH / 2)) + ', ' + array.location.y - (DEFAULT_PIN_HEIGHT);
+  adForm.classList.remove('ad-form--disabled');
+  enableAdForm();
 };
 
 // функция валидации комнат и количества гостей
-var checkValidityRooms = function (numberOfRooms, numberOfGuests) {
-  if (numberOfRooms.value === '1' && numberOfGuests.value !== '1') {
-    capacity.setCustomValidity('1 комната только для 1-го гостя');
-  } else if (numberOfRooms.value === '2' && (numberOfGuests.value === '3' || numberOfGuests.value === '0')) {
-    capacity.setCustomValidity('2 комнаты для 1-го или 2-ух гостей');
-  } else if (numberOfRooms.value === '3' && numberOfGuests.value === '0') {
-    capacity.setCustomValidity('3 комнаты для 1-го, 2-ух или 3-ех гостей');
-  } else if (numberOfRooms.value === '100' && numberOfGuests.value !== '0') {
-    capacity.setCustomValidity('Это помещение не для гостей');
-  } else {
-    capacity.setCustomValidity('');
+var validateCapacity = function () {
+  var error = '';
+  if (rooms.value === '1' && capacity.value !== '1') {
+    error = '1 комната только для 1-го гостя';
+  } else if (rooms.value === '2' && (capacity.value === '3' || capacity.value === '0')) {
+    error = '2 комнаты для 1-го или 2-ух гостей';
+  } else if (rooms.value === '3' && capacity.value === '0') {
+    error = '3 комнаты для 1-го, 2-ух или 3-ех гостей';
+  } else if (rooms.value === '100' && capacity.value !== '0') {
+    error = 'Это помещение не для гостей';
   }
+  capacity.setCustomValidity(error);
 };
 
 // случайная цифра
@@ -119,32 +114,64 @@ var getRandomLengthArray = function (array) {
   return tempArray;
 };
 
+// создание пина + рендер
+var pinTemplate = document.querySelector('#pin');
+var pinsMap = document.querySelector('.map__pins');
+
+var createPin = function (pinData) {
+  var template = pinTemplate.cloneNode(true).content;
+  var pin = template.querySelector('.map__pin');
+  var avatar = template.querySelector('img');
+
+  var pinLeft = pinData.location.x - (PIN_WIDTH / 2);
+  var pinTop = pinData.location.y - (PIN_HEIGHT);
+
+  pin.style.left = pinLeft + 'px';
+  pin.style.top = pinTop + 'px';
+  pin.alt = pinData.offer.title;
+  avatar.src = pinData.author.avatar;
+
+  return template;
+};
+
+var renderPins = function (pinsData) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < pinsData.length; i++) {
+    fragment.appendChild(createPin(pinsData[i]));
+  }
+
+  pinsMap.appendChild(fragment);
+};
+
 // вызвал функцию добавления атрибута disabled
-disabledForm();
+disableAdForm();
 
 // заполнил поле адреса
-setEnAdress();
+setInitialAddress();
 
 // Слушаю форму
-formBasic.addEventListener('change', function (evt) {
+adForm.addEventListener('change', function (evt) {
   if (evt.target === rooms || evt.target === capacity) {
-    checkValidityRooms(rooms, capacity);
+    validateCapacity();
   }
-  formBasic.reportValidity('');
+  adForm.reportValidity('');
 });
 
 // Адрес (координаты) пока вписал в поле из случайного массив, потом изменю
-mapMainEl.addEventListener('mousedown', function (evt) {
+mapMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     makeAppActive();
     setActiveAdress();
+    renderPins(announcements);
   }
 });
 
-mapMainEl.addEventListener('keydown', function (evt) {
+mapMain.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 13) {
     makeAppActive();
-    getAddressValue(announcements);
+    setActiveAdress();
+    renderPins(announcements);
   }
 });
 
@@ -180,36 +207,3 @@ var createAnnouncements = function () {
 };
 
 var announcements = createAnnouncements();
-
-
-// создание пина + рендер
-var pinTemplate = document.querySelector('#pin');
-var pinsMap = document.querySelector('.map__pins');
-
-var createPin = function (pinData) {
-  var template = pinTemplate.cloneNode(true).content;
-  var pin = template.querySelector('.map__pin');
-  var avatar = template.querySelector('img');
-
-  var pinLeft = pinData.location.x - (PIN_WIDTH / 2);
-  var pinTop = pinData.location.y - (PIN_HEIGHT);
-
-  pin.style.left = pinLeft + 'px';
-  pin.style.top = pinTop + 'px';
-  pin.alt = pinData.offer.title;
-  avatar.src = pinData.author.avatar;
-
-  return template;
-};
-
-var renderPins = function (pinsData) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < pinsData.length; i++) {
-    fragment.appendChild(createPin(pinsData[i]));
-  }
-
-  pinsMap.appendChild(fragment);
-};
-
-renderPins(announcements);

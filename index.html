@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="css/normalize.css">
@@ -8,9 +7,7 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <title>Кексобукинг</title>
 </head>
-
 <body>
-
   <main>
     <div class="promo">
       <h1 class="promo__title visually-hidden">Keksobooking. Кексы по соседству</h1>
@@ -67,7 +64,7 @@
             <option value="1">Один гость</option>
             <option value="0">Не для гостей</option>
           </select>
-          <fieldset id="housing-features" class="map__features" disabled>
+          <fieldset id="housing-features" class="map__features">
             <input type="checkbox" name="features" value="wifi" id="filter-wifi" class="map__checkbox visually-hidden">
             <label class="map__feature map__feature--wifi" for="filter-wifi">Wi-Fi</label>
             <input type="checkbox" name="features" value="dishwasher" id="filter-dishwasher"
@@ -155,9 +152,9 @@
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="capacity">Количество мест</label>
           <select id="capacity" name="capacity">
-            <option value="3" selected>для 3 гостей</option>
+            <option value="3">для 3 гостей</option>
             <option value="2">для 2 гостей</option>
-            <option value="1">для 1 гостя</option>
+            <option value="1" selected>для 1 гостя</option>
             <option value="0">не для гостей</option>
           </select>
         </fieldset>
