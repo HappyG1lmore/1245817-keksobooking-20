@@ -3,9 +3,7 @@
 window.form = (function () {
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
-
   var address = adForm.querySelector('#address');
-
   var rooms = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
 
@@ -19,6 +17,7 @@ window.form = (function () {
   var enableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
+      adForm.classList.remove('ad-form--disabled');
     });
   };
 
@@ -30,12 +29,12 @@ window.form = (function () {
 
   // Футкция, адрес первого дефолтного пина (элипс)
   var setInitialAddress = function () {
-    address.value = (window.constants.DEFAULT_PIN_LEFT - (window.constants.DEFAULT_PIN_WIDTH / 2)) + ', ' + (window.constants.DEFAULT_PIN_TOP - (window.constants.DEFAULT_PIN_HEIGHT / 2));
+    address.value = (window.data.DEFAULT_PIN_LEFT - (window.data.DEFAULT_PIN_WIDTH / 2)) + ', ' + (window.data.DEFAULT_PIN_TOP - (window.data.DEFAULT_PIN_HEIGHT / 2));
   };
 
   // Функция, поле адреса при активации формы
-  var setActiveAdress = function () {
-    address.value = (window.constants.DEFAULT_PIN_LEFT - (window.constants.DEFAULT_PIN_WIDTH / 2)) + ', ' + (window.constants.DEFAULT_PIN_TOP - window.constants.DEFAULT_PIN_HEIGHT);
+  var setActiveAddress = function () {
+    address.value = (window.data.DEFAULT_PIN_LEFT - (window.data.DEFAULT_PIN_WIDTH / 2)) + ', ' + (window.data.DEFAULT_PIN_TOP - window.data.DEFAULT_PIN_HEIGHT);
   };
 
   // Функция валидации
@@ -57,7 +56,7 @@ window.form = (function () {
     enableAdForm: enableAdForm,
     disableAdForm: disableAdForm,
     setInitialAddress: setInitialAddress,
-    setActiveAdress: setActiveAdress,
+    setActiveAddress: setActiveAddress,
     validateCapacity: validateCapacity,
     adForm: adForm,
     adFormFieldsets: adFormFieldsets,

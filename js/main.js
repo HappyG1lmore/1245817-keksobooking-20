@@ -6,18 +6,25 @@ window.form.disableAdForm();
 // заполнил поле адреса
 window.form.setInitialAddress();
 
-window.map.mapMain.addEventListener('mousedown', function (evt) {
+var enableApp = function () {
+  window.form.enableAdForm();
+  window.map.enableMap();
+};
+
+enableApp();
+
+window.map.mapPin.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
-    window.map.makeAppActive();
-    window.form.setActiveAdress();
+    window.map.enableMap();
+    window.form.setActiveAddress();
     window.pin.renderPins(window.data.announcements);
   }
 });
 
-window.map.mapMain.addEventListener('keydown', function (evt) {
+window.map.mapPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 13) {
-    window.map.makeAppActive();
-    window.form.setActiveAdress();
+    window.map.enableMap();
+    window.form.setActiveAddress();
     window.pin.renderPins(window.data.announcements);
   }
 });

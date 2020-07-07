@@ -9,8 +9,8 @@ window.pin = (function () {
     var pin = template.querySelector('.map__pin');
     var avatar = template.querySelector('img');
 
-    var pinLeft = pinData.location.x - (window.constants.PIN_WIDTH / 2);
-    var pinTop = pinData.location.y - (window.constants.PIN_HEIGHT);
+    var pinLeft = pinData.location.x - (window.data.PIN_WIDTH / 2);
+    var pinTop = pinData.location.y - (window.data.PIN_HEIGHT);
 
     pin.style.left = pinLeft + 'px';
     pin.style.top = pinTop + 'px';
@@ -30,7 +30,6 @@ window.pin = (function () {
   };
 
   return {
-    createPin: createPin,
     renderPins: renderPins
   };
 
