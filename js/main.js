@@ -11,10 +11,9 @@ var enableApp = function () {
   window.map.enableMap();
 };
 
-enableApp();
-
 window.map.mapPin.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
+    enableApp();
     window.map.enableMap();
     window.form.setActiveAddress();
     window.pin.renderPins(window.data.announcements);
@@ -23,6 +22,7 @@ window.map.mapPin.addEventListener('mousedown', function (evt) {
 
 window.map.mapPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 13) {
+    enableApp();
     window.map.enableMap();
     window.form.setActiveAddress();
     window.pin.renderPins(window.data.announcements);

@@ -3,6 +3,10 @@
 window.map = (function () {
   var map = document.querySelector('.map');
   var mapPin = map.querySelector('.map__pin--main');
+  var mapWidth = map.clientWidth;
+  // По условию дано
+  var lowerBorderMap = 630;
+  var UpperBorderMap = 130;
 
   var enableMap = function () {
     map.classList.remove('map--faded');
@@ -15,7 +19,6 @@ window.map = (function () {
       x: evt.clientX,
       y: evt.clientY
     };
-    console.log(startCoords);
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
@@ -30,9 +33,20 @@ window.map = (function () {
         y: moveEvt.clientY
       };
 
-      mapPin.style.top = (mapPin.offsetTop - shift.y) + 'px';
-      mapPin.style.left = (mapPin.offsetLeft - shift.x) + 'px';
+      var target = {
+        x: mapPin.offsetLeft - shift.x,
+        y: mapPin.offsetTop - shift.y
+      };
 
+      window.form.address.value = target.x + ', ' + target.y;
+
+      if (target.x >= 0 && target.x <= mapWidth - mapPin.clientWidth) {
+        mapPin.style.left = target.x + 'px';
+      }
+
+      if (target.y >= UpperBorderMap && target.y <= lowerBorderMap) {
+        mapPin.style.top = target.y + 'px';
+      }
     };
 
     var onMouseUp = function (upEvt) {
@@ -40,6 +54,7 @@ window.map = (function () {
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+
     };
 
     document.addEventListener('mousemove', onMouseMove);
