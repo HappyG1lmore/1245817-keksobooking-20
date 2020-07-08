@@ -1,6 +1,11 @@
 'use strict';
 
 window.form = (function () {
+  var DEFAULT_PIN_WIDTH = 65;
+  var DEFAULT_PIN_HEIGHT = 80;
+  var DEFAULT_PIN_LEFT = 570;
+  var DEFAULT_PIN_TOP = 375;
+
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var address = adForm.querySelector('#address');
@@ -29,12 +34,12 @@ window.form = (function () {
 
   // Футкция, адрес первого дефолтного пина (элипс)
   var setInitialAddress = function () {
-    address.value = (window.data.DEFAULT_PIN_LEFT - (window.data.DEFAULT_PIN_WIDTH / 2)) + ', ' + (window.data.DEFAULT_PIN_TOP - (window.data.DEFAULT_PIN_HEIGHT / 2));
+    address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - (DEFAULT_PIN_HEIGHT / 2));
   };
 
   // Функция, поле адреса при активации формы
   var setActiveAddress = function () {
-    address.value = (window.data.DEFAULT_PIN_LEFT - (window.data.DEFAULT_PIN_WIDTH / 2)) + ', ' + (window.data.DEFAULT_PIN_TOP - window.data.DEFAULT_PIN_HEIGHT);
+    address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - DEFAULT_PIN_HEIGHT);
   };
 
   // Функция валидации

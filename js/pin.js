@@ -1,6 +1,9 @@
 'use strict';
 
 window.pin = (function () {
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
+
   var pinTemplate = document.querySelector('#pin');
   var pinsMap = document.querySelector('.map__pins');
 
@@ -9,8 +12,8 @@ window.pin = (function () {
     var pin = template.querySelector('.map__pin');
     var avatar = template.querySelector('img');
 
-    var pinLeft = pinData.location.x - (window.data.PIN_WIDTH / 2);
-    var pinTop = pinData.location.y - (window.data.PIN_HEIGHT);
+    var pinLeft = pinData.location.x - (PIN_WIDTH / 2);
+    var pinTop = pinData.location.y - (PIN_HEIGHT);
 
     pin.style.left = pinLeft + 'px';
     pin.style.top = pinTop + 'px';

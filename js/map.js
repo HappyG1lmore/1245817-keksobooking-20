@@ -1,18 +1,14 @@
 'use strict';
 
 window.map = (function () {
-  var map = document.querySelector('.map');
-  var mapPin = map.querySelector('.map__pin--main');
-  var mapWidth = map.clientWidth;
+  var mainMap = document.querySelector('.map');
+  var mainPin = mainMap.querySelector('.map__pin--main');
+  var mapWidth = mainMap.clientWidth;
   // По условию дано
-  var lowerBorderMap = 630;
-  var UpperBorderMap = 130;
+  var BOTTOM_MAP_BORDER = 630;
+  var TOP_MAP_BORDER = 130;
 
-  var enableMap = function () {
-    map.classList.remove('map--faded');
-  };
-
-  mapPin.addEventListener('mousedown', function (evt) {
+  mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     var startCoords = {
@@ -34,18 +30,18 @@ window.map = (function () {
       };
 
       var target = {
-        x: mapPin.offsetLeft - shift.x,
-        y: mapPin.offsetTop - shift.y
+        x: mainPin.offsetLeft - shift.x,
+        y: mainPin.offsetTop - shift.y
       };
 
       window.form.address.value = target.x + ', ' + target.y;
 
-      if (target.x >= 0 && target.x <= mapWidth - mapPin.clientWidth) {
-        mapPin.style.left = target.x + 'px';
+      if (target.x >= 0 && target.x <= mapWidth - mainPin.clientWidth) {
+        mainPin.style.left = target.x + 'px';
       }
 
-      if (target.y >= UpperBorderMap && target.y <= lowerBorderMap) {
-        mapPin.style.top = target.y + 'px';
+      if (target.y >= TOP_MAP_BORDER && target.y <= BOTTOM_MAP_BORDER) {
+        mainPin.style.top = target.y + 'px';
       }
     };
 
@@ -62,9 +58,8 @@ window.map = (function () {
   });
 
   return {
-    enableMap: enableMap,
-    mapPin: mapPin,
-    map: map
+    mainPin: mainPin,
+    mainMap: mainMap
   };
 })();
 

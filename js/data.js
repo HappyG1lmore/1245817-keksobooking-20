@@ -25,15 +25,6 @@ window.data = (function () {
   var MAX_GUESTS = 6;
   var AMOUNT_ADS = 8;
 
-  var PIN_WIDTH = 50;
-  var PIN_HEIGHT = 70;
-  var DEFAULT_PIN_WIDTH = 65;
-  var DEFAULT_PIN_HEIGHT = 80;
-
-  var DEFAULT_PIN_LEFT = 570;
-  var DEFAULT_PIN_TOP = 375;
-
-
   var createAnnouncements = function () {
     var result = [];
 
@@ -68,13 +59,5 @@ window.data = (function () {
 
   return {
     announcements: announcements,
-
-    PIN_WIDTH: PIN_WIDTH,
-    PIN_HEIGHT: PIN_HEIGHT,
-    DEFAULT_PIN_WIDTH: DEFAULT_PIN_WIDTH,
-    DEFAULT_PIN_HEIGHT: DEFAULT_PIN_HEIGHT,
-
-    DEFAULT_PIN_LEFT: DEFAULT_PIN_LEFT,
-    DEFAULT_PIN_TOP: DEFAULT_PIN_TOP
   };
 })();
