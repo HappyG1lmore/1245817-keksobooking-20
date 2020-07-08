@@ -1,37 +1,36 @@
 'use strict';
-var appActive = false;
+var isAppActive = false;
 
-// вызвал функцию добавления атрибута disabled (КАК БЫТЬ С ФУНКЦИЯМИ КОТОРЫЕ ДОЛЖНЫ САМИ СРАБАТЫВАТЬ?)
-window.form.disableAdForm();
+var initApp = function () {
+  window.form.disableAdForm();
+  window.form.setInitialAddress();
+};
 
-// заполнил поле адреса
-window.form.setInitialAddress();
+initApp();
 
 var enableApp = function () {
   window.form.enableAdForm();
   window.map.mainMap.classList.remove('map--faded');
+  window.form.setActiveAddress();
+  window.pin.renderPins(window.data.announcements);
 };
 
 window.map.mainPin.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
-    if (appActive === true) {
+    if (isAppActive) {
       return;
     }
-    appActive = true;
+    isAppActive = true;
     enableApp();
-    window.form.setActiveAddress();
-    window.pin.renderPins(window.data.announcements);
   }
 });
 
 window.map.mainPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 13) {
-    if (appActive === true) {
+    if (isAppActive) {
       return;
     }
-    appActive = true;
+    isAppActive = true;
     enableApp();
-    window.form.setActiveAddress();
-    window.pin.renderPins(window.data.announcements);
   }
 });

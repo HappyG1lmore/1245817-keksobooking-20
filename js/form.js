@@ -26,6 +26,7 @@ window.form = (function () {
     });
   };
 
+  // вызвал функцию добавления атрибута disabled
   var disableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = true;
