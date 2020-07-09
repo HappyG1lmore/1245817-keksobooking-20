@@ -1,12 +1,23 @@
 'use strict';
 
 window.card = (function () {
+  var PHOTO_WIDTH = 45;
+  var PHOTO_HEIGHT = 40;
 
   var cardTemplate = document.querySelector('#card');
 
+  var hideBlock = function (blockElement) {
+    blockElement.classList.add('hidden');
+  };
+
+  var offerTypeDisplay = {
+    'palace': 'дворец',
+    'flat': 'Квартира',
+    'bungalo': 'Бунгало',
+    'house': 'Дом'
+  };
+
   var createCard = function (cardData) {
-    var PHOTO_WIDTH = 45;
-    var PHOTO_HEIGHT = 40;
 
     var template = cardTemplate.cloneNode(true).content;
     var avatar = template.querySelector('.popup__avatar');
@@ -20,44 +31,68 @@ window.card = (function () {
     var description = template.querySelector('.popup__description');
     var photos = template.querySelector('.popup__photos');
 
-    title.textContent = cardData.offer.title;
-    address.textContent = cardData.offer.address;
-    price.textContent = cardData.offer.price + '₽/ночь';
+    if (cardData.offer.title) {
+      title.textContent = cardData.offer.title;
+    } else {
+      hideBlock(title);
+    }
 
-    capacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
-    time.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
+    if (cardData.offer.address) {
+      address.textContent = cardData.offer.address;
+    } else {
+      hideBlock(address);
+    }
 
-    avatar.src = cardData.author.avatar;
+    if (cardData.offer.price) {
+      price.textContent = cardData.offer.price + '₽/ночь';
+    } else {
+      hideBlock(price);
+    }
 
-    description.textContent = cardData.offer.description;
+    if (cardData.offer.rooms && cardData.offer.guests) {
+      capacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
+    } else {
+      hideBlock(title);
+    }
 
-    if (cardData.offer.type === 'flat') {
-      type.textContent = 'Квартира';
-    } else if (
-      cardData.offer.type === 'house') {
-      type.textContent = 'Дом';
-    } else if (
-      cardData.offer.type === 'bungalo') {
-      type.textContent = 'Бунгало';
-    } else if (
-      cardData.offer.type === 'palace') {
-      type.textContent = 'Дворец';
+    if (cardData.offer.checkin && cardData.offer.checkout) {
+      time.textContent = 'Заезд после ' + cardData.offer.checkin + ', выезд до ' + cardData.offer.checkout;
+    } else {
+      hideBlock(time);
+    }
+
+    if (cardData.offer.description) {
+      description.textContent = cardData.offer.description;
+    } else {
+      hideBlock(description);
+    }
+
+    if (cardData.offer.type) {
+      type.textContent = offerTypeDisplay[cardData.offer.type];
+    } else {
+      hideBlock(type);
+    }
+
+    if (cardData.author.avatar) {
+      avatar.src = cardData.author.avatar;
+    } else {
+      hideBlock(avatar);
     }
 
     var addFeatures = function (featuresArr) {
       features.innerHTML = '';
-      featuresArr.forEach(function (item) {
-        var feature = document.createElement('li');
-        feature.classList.add('popup__feature', 'popup__feature--' + item);
-        features.appendChild(feature);
+      featuresArr.forEach(function (feature) {
+        var li = document.createElement('li');
+        li.classList.add('popup__feature', 'popup__feature--' + feature);
+        features.appendChild(li);
       });
     };
 
     var addPhotos = function (photosArr) {
       photos.innerHTML = '';
-      photosArr.forEach(function (item) {
+      photosArr.forEach(function (photoSrc) {
         var img = document.createElement('img');
-        img.src = item;
+        img.src = photoSrc;
         img.classList.add('popup__photo');
         img.alt = 'Фотография жилья';
         img.width = PHOTO_WIDTH;
@@ -66,25 +101,25 @@ window.card = (function () {
       });
     };
 
-    addPhotos(cardData.offer.photos);
-    addFeatures(cardData.offer.features);
+    if (cardData.offer.photos && cardData.offer.photos.length) {
+      addPhotos(cardData.offer.photos);
+    } else {
+      hideBlock(photos);
+    }
+
+    if (cardData.offer.features && cardData.offer.features.length) {
+      addFeatures(cardData.offer.features);
+    } else {
+      hideBlock(features);
+    }
 
     return template;
   };
 
-  var renderCard = function (cardsData) {
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(createCard(cardsData));
-    window.map.mapForm.before(fragment);
+  var renderCard = function (cardData) {
+    var card = createCard(cardData);
+    window.map.mapForm.before(card);
   };
-
-
-  /*
-    if  (!block.value) {
-      // прячем блок
-    }
-    */
-
 
   return {
     renderCard: renderCard
