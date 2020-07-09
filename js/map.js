@@ -3,10 +3,16 @@
 window.map = (function () {
   var mainMap = document.querySelector('.map');
   var mainPin = mainMap.querySelector('.map__pin--main');
+  var mapForm = mainMap.querySelector('.map__filters-container');
   var mapWidth = mainMap.clientWidth;
+
   // По условию дано
   var BOTTOM_MAP_BORDER = 630;
   var TOP_MAP_BORDER = 130;
+
+  console.log(TOP_MAP_BORDER);
+  console.log(mainMap);
+
 
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -59,7 +65,8 @@ window.map = (function () {
 
   return {
     mainPin: mainPin,
-    mainMap: mainMap
+    mainMap: mainMap,
+    mapForm: mapForm
   };
 })();
 
