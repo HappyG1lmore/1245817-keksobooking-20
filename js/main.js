@@ -13,6 +13,7 @@ var enableApp = function () {
   window.map.mainMap.classList.remove('map--faded');
   window.form.setActiveAddress();
   window.pin.renderPins(window.data.announcements);
+  window.card.renderCard(window.data.announcements[0]);
 };
 
 window.map.mainPin.addEventListener('mousedown', function (evt) {

@@ -56,7 +56,7 @@ window.data = (function () {
   };
 
   var announcements = createAnnouncements();
-
+  console.log(announcements[0].offer.type);
   return {
     announcements: announcements,
   };
