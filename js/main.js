@@ -10,7 +10,13 @@ initApp();
 
 var onMapClick = function (evt) {
   var closestPin = evt.target.closest('.map__pin');
+  var mapAnnouncementСard = document.querySelector('.map__card');
+
   if (closestPin && !closestPin.classList.contains('map__pin--main')) {
+
+    if (mapAnnouncementСard) {
+      mapAnnouncementСard.remove();
+    }
     window.card.renderCard(window.data.announcements[closestPin.dataset.id]);
   }
 };

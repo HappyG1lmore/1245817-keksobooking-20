@@ -12,6 +12,18 @@ window.form = (function () {
   var rooms = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
 
+  var price = adForm.querySelector('#price');
+  var type = adForm.querySelector('#type');
+  var timein = adForm.querySelector('#timein');
+  var timeout = adForm.querySelector('#timeout');
+
+  var minPriceLimit = {
+    'palace': 10000,
+    'flat': 1000,
+    'bungalo': 0,
+    'house': 5000
+  };
+
   adForm.addEventListener('change', function (evt) {
     if (evt.target === rooms || evt.target === capacity) {
       validateCapacity();
@@ -57,6 +69,20 @@ window.form = (function () {
     }
     capacity.setCustomValidity(error);
   };
+
+  type.addEventListener('click', function () {
+    var typeOfHousing = type.value;
+    price.setAttribute('min', minPriceLimit[typeOfHousing]);
+    price.placeholder = minPriceLimit[typeOfHousing];
+  });
+
+  timein.addEventListener('click', function () {
+    timeout.value = timein.value;
+  });
+  timeout.addEventListener('click', function () {
+    timein.value = timeout.value;
+  });
+
 
   return {
     enableAdForm: enableAdForm,

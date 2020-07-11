@@ -156,6 +156,8 @@ window.card = (function () {
 
   return {
     renderCard: renderCard,
+    closeCard: closeCard,
+    offerTypeDisplay: offerTypeDisplay
   };
 
 })();
