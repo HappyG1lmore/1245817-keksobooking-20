@@ -17,6 +17,38 @@ window.card = (function () {
     'house': 'Дом'
   };
 
+  var addListenerCloseCard = function () {
+    var mapAnnouncementСard = document.querySelector('.map__card');
+    var buttonCloseCard = mapAnnouncementСard.querySelector('.popup__close');
+
+    document.addEventListener('keydown', onCardEscPress);
+    buttonCloseCard.addEventListener('click', onCardMouseClick);
+  };
+
+  var closeCard = function () {
+    var mapAnnouncementСard = document.querySelector('.map__card');
+    var buttonCloseCard = mapAnnouncementСard.querySelector('.popup__close');
+
+    mapAnnouncementСard.remove();
+    // по логике тут нужно удалять слушатели закрывающие карточку
+    document.removeEventListener('keydown', onCardEscPress);
+    buttonCloseCard.addEventListener('click', onCardMouseClick);
+  };
+
+  var onCardEscPress = function (evt) {
+    if (evt.keyCode === 27) {
+      evt.preventDefault();
+      closeCard();
+    }
+  };
+
+  var onCardMouseClick = function (evt) {
+    if (evt.button === 0) {
+      evt.preventDefault();
+      closeCard();
+    }
+  };
+
   var createCard = function (cardData) {
 
     var template = cardTemplate.cloneNode(true).content;
@@ -52,7 +84,7 @@ window.card = (function () {
     if (cardData.offer.rooms && cardData.offer.guests) {
       capacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     } else {
-      hideBlock(title);
+      hideBlock(capacity);
     }
 
     if (cardData.offer.checkin && cardData.offer.checkout) {
@@ -119,10 +151,11 @@ window.card = (function () {
   var renderCard = function (cardData) {
     var card = createCard(cardData);
     window.map.mapForm.before(card);
+    addListenerCloseCard(cardData);
   };
 
   return {
-    renderCard: renderCard
+    renderCard: renderCard,
   };
 
 })();

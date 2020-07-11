@@ -7,33 +7,36 @@ window.pin = (function () {
   var pinTemplate = document.querySelector('#pin');
   var pinsMap = document.querySelector('.map__pins');
 
-  var createPin = function (pinData) {
+  var createPin = function (announcementData) {
     var template = pinTemplate.cloneNode(true).content;
     var pin = template.querySelector('.map__pin');
     var avatar = template.querySelector('img');
 
-    var pinLeft = pinData.location.x - (PIN_WIDTH / 2);
-    var pinTop = pinData.location.y - (PIN_HEIGHT);
+    var pinLeft = announcementData.location.x - (PIN_WIDTH / 2);
+    var pinTop = announcementData.location.y - (PIN_HEIGHT);
 
     pin.style.left = pinLeft + 'px';
     pin.style.top = pinTop + 'px';
-    pin.alt = pinData.offer.title;
-    avatar.src = pinData.author.avatar;
+    pin.alt = announcementData.offer.title;
+    avatar.src = announcementData.author.avatar;
+    pin.setAttribute('data-id', announcementData.id)
 
     return template;
   };
 
-  var renderPins = function (pinsData) {
+  var renderPins = function (announcementsData) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pinsData.length; i++) {
-      fragment.appendChild(createPin(pinsData[i]));
-    }
+    announcementsData.forEach(function (announcementData) {
+      fragment.appendChild(createPin(announcementData));
+    });
+
     pinsMap.appendChild(fragment);
   };
 
+
   return {
-    renderPins: renderPins
+    renderPins: renderPins,
   };
 
 })();
