@@ -6,6 +6,8 @@ window.card = (function () {
 
   var cardTemplate = document.querySelector('#card');
 
+  var activeCard;
+
   var hideBlock = function (blockElement) {
     blockElement.classList.add('hidden');
   };
@@ -17,40 +19,36 @@ window.card = (function () {
     'house': 'Дом'
   };
 
-  var addListenerCloseCard = function () {
-    var mapAnnouncementСard = document.querySelector('.map__card');
-    var buttonCloseCard = mapAnnouncementСard.querySelector('.popup__close');
-
-    document.addEventListener('keydown', onCardEscPress);
-    buttonCloseCard.addEventListener('click', onCardMouseClick);
-  };
-
-  var closeCard = function () {
-    var mapAnnouncementСard = document.querySelector('.map__card');
-    var buttonCloseCard = mapAnnouncementСard.querySelector('.popup__close');
-
-    mapAnnouncementСard.remove();
-    // по логике тут нужно удалять слушатели закрывающие карточку
-    document.removeEventListener('keydown', onCardEscPress);
-    buttonCloseCard.addEventListener('click', onCardMouseClick);
-  };
-
   var onCardEscPress = function (evt) {
-    if (evt.keyCode === 27) {
+    if (window.utils.isEscPressed(evt)) {
       evt.preventDefault();
-      closeCard();
+      removeCard();
     }
   };
 
   var onCardMouseClick = function (evt) {
-    if (evt.button === 0) {
-      evt.preventDefault();
-      closeCard();
+    if (evt.target.classList.contains('popup__close')) {
+      removeCard();
     }
   };
 
-  var createCard = function (cardData) {
+  var removeCard = function () {
+    if (!activeCard) {
+      return;
+    }
+    document.removeEventListener('keydown', onCardEscPress);
+    activeCard.removeEventListener('click', onCardMouseClick);
+    activeCard.remove();
+    activeCard = null;
+  };
 
+
+  var addCardEventListeners = function () {
+    document.addEventListener('keydown', onCardEscPress);
+    activeCard.addEventListener('click', onCardMouseClick);
+  };
+
+  var createCard = function (cardData) {
     var template = cardTemplate.cloneNode(true).content;
     var avatar = template.querySelector('.popup__avatar');
     var title = template.querySelector('.popup__title');
@@ -62,6 +60,29 @@ window.card = (function () {
     var features = template.querySelector('.popup__features');
     var description = template.querySelector('.popup__description');
     var photos = template.querySelector('.popup__photos');
+
+    var addFeatures = function () {
+      features.innerHTML = '';
+      cardData.offer.features.forEach(function (feature) {
+        var li = document.createElement('li');
+        li.classList.add('popup__feature', 'popup__feature--' + feature);
+        features.appendChild(li);
+      });
+    };
+
+    var addPhotos = function () {
+      photos.innerHTML = '';
+      cardData.offer.photos.forEach(function (photoSrc) {
+        var img = document.createElement('img');
+        img.src = photoSrc;
+        img.classList.add('popup__photo');
+        img.alt = 'Фотография жилья';
+        img.width = PHOTO_WIDTH;
+        img.height = PHOTO_HEIGHT;
+        photos.appendChild(img);
+      });
+    };
+
 
     if (cardData.offer.title) {
       title.textContent = cardData.offer.title;
@@ -111,27 +132,6 @@ window.card = (function () {
       hideBlock(avatar);
     }
 
-    var addFeatures = function (featuresArr) {
-      features.innerHTML = '';
-      featuresArr.forEach(function (feature) {
-        var li = document.createElement('li');
-        li.classList.add('popup__feature', 'popup__feature--' + feature);
-        features.appendChild(li);
-      });
-    };
-
-    var addPhotos = function (photosArr) {
-      photos.innerHTML = '';
-      photosArr.forEach(function (photoSrc) {
-        var img = document.createElement('img');
-        img.src = photoSrc;
-        img.classList.add('popup__photo');
-        img.alt = 'Фотография жилья';
-        img.width = PHOTO_WIDTH;
-        img.height = PHOTO_HEIGHT;
-        photos.appendChild(img);
-      });
-    };
 
     if (cardData.offer.photos && cardData.offer.photos.length) {
       addPhotos(cardData.offer.photos);
@@ -149,14 +149,18 @@ window.card = (function () {
   };
 
   var renderCard = function (cardData) {
+    if (activeCard) {
+      removeCard();
+    }
+
     var card = createCard(cardData);
+    activeCard = card.querySelector('.map__card');
+    addCardEventListeners();
     window.map.mapForm.before(card);
-    addListenerCloseCard(cardData);
   };
 
   return {
     renderCard: renderCard,
-    closeCard: closeCard,
     offerTypeDisplay: offerTypeDisplay
   };
 

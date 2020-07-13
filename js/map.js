@@ -1,63 +1,65 @@
 'use strict';
 
 window.map = (function () {
-  var mainMap = document.querySelector('.map');
-  var mainPin = mainMap.querySelector('.map__pin--main');
-  var mapForm = mainMap.querySelector('.map__filters-container');
-
-  var mapWidth = mainMap.clientWidth;
-  // По условию дано
   var BOTTOM_MAP_BORDER = 630;
   var TOP_MAP_BORDER = 130;
 
-  mainPin.addEventListener('mousedown', function (evt) {
+  var mainMap = document.querySelector('.map');
+  var mainPin = mainMap.querySelector('.map__pin--main');
+  var mapForm = mainMap.querySelector('.map__filters-container');
+  var mapWidth = mainMap.clientWidth;
+
+  var moveStartCoords;
+
+  var onMouseMove = function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
+    var shift = {
+      x: moveStartCoords.x - evt.clientX,
+      y: moveStartCoords.y - evt.clientY
+    };
+
+    var target = {
+      x: mainPin.offsetLeft - shift.x,
+      y: mainPin.offsetTop - shift.y
+    };
+
+    if (target.x >= 0 && target.x <= mapWidth - mainPin.clientWidth) {
+      mainPin.style.left = target.x + 'px';
+    }
+
+    if (target.y >= TOP_MAP_BORDER && target.y <= BOTTOM_MAP_BORDER) {
+      mainPin.style.top = target.y + 'px';
+    }
+
+    moveStartCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
 
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
+    window.form.setAddress(target.x, target.y);
+  };
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+  var onMouseUp = function (evt) {
+    evt.preventDefault();
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
 
-      var target = {
-        x: mainPin.offsetLeft - shift.x,
-        y: mainPin.offsetTop - shift.y
-      };
+  var onMouseDown = function (evt) {
+    evt.preventDefault();
 
-      window.form.address.value = target.x + ', ' + target.y;
-
-      if (target.x >= 0 && target.x <= mapWidth - mainPin.clientWidth) {
-        mainPin.style.left = target.x + 'px';
-      }
-
-      if (target.y >= TOP_MAP_BORDER && target.y <= BOTTOM_MAP_BORDER) {
-        mainPin.style.top = target.y + 'px';
-      }
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-
+    moveStartCoords = {
+      x: evt.clientX,
+      y: evt.clientY
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  });
+  };
+
+  mainPin.addEventListener('mousedown', onMouseDown);
 
   return {
     mainPin: mainPin,
@@ -65,5 +67,4 @@ window.map = (function () {
     mapForm: mapForm,
   };
 })();
-
 

@@ -19,7 +19,7 @@ window.pin = (function () {
     pin.style.top = pinTop + 'px';
     pin.alt = announcementData.offer.title;
     avatar.src = announcementData.author.avatar;
-    pin.setAttribute('data-id', announcementData.id)
+    pin.setAttribute('data-id', announcementData.id);
 
     return template;
   };
