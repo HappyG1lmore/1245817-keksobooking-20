@@ -18,10 +18,11 @@ var enableApp = function () {
 };
 
 var onMapClick = function (evt) {
-  var closestPin = evt.target.closest('.map__pin');
+  var pin = evt.target.closest('.map__pin');
 
-  if (closestPin && !closestPin.classList.contains('map__pin--main')) {
-    window.card.renderCard(window.data.announcements[closestPin.dataset.id]);
+  if (pin && !pin.classList.contains('map__pin--main') && !pin.classList.contains('map__pin--active')) {
+    pin.classList.add('map__pin--active');
+    window.card.renderCard(window.data.announcements[pin.dataset.id], pin);
   }
 };
 

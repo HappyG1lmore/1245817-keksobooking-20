@@ -7,6 +7,7 @@ window.card = (function () {
   var cardTemplate = document.querySelector('#card');
 
   var activeCard;
+  var activePin;
 
   var hideBlock = function (blockElement) {
     blockElement.classList.add('hidden');
@@ -39,7 +40,9 @@ window.card = (function () {
     document.removeEventListener('keydown', onCardEscPress);
     activeCard.removeEventListener('click', onCardMouseClick);
     activeCard.remove();
+    activePin.classList.remove('map__pin--active');
     activeCard = null;
+    activePin = null;
   };
 
 
@@ -148,13 +151,14 @@ window.card = (function () {
     return template;
   };
 
-  var renderCard = function (cardData) {
+  var renderCard = function (cardData, pin) {
     if (activeCard) {
       removeCard();
     }
 
     var card = createCard(cardData);
     activeCard = card.querySelector('.map__card');
+    activePin = pin;
     addCardEventListeners();
     window.map.mapForm.before(card);
   };

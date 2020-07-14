@@ -57,7 +57,7 @@ window.form = (function () {
     var offsetX = MAIN_PIN_WIDTH / 2;
     var offsetY = window.isAppActive ? MAIN_PIN_HEIGHT : MAIN_PIN_HEIGHT / 2;
 
-    address.value = (x + offsetX) + ', ' + (y + offsetY);
+    address.value = Math.round((x + offsetX)) + ', ' + Math.round((y + offsetY));
   };
 
   var validateCapacity = function () {
