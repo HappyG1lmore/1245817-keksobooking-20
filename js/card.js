@@ -6,6 +6,9 @@ window.card = (function () {
 
   var cardTemplate = document.querySelector('#card');
 
+  var activeCard;
+  var activePin;
+
   var hideBlock = function (blockElement) {
     blockElement.classList.add('hidden');
   };
@@ -17,8 +20,38 @@ window.card = (function () {
     'house': 'Дом'
   };
 
-  var createCard = function (cardData) {
+  var onCardEscPress = function (evt) {
+    if (window.utils.isEscPressed(evt)) {
+      evt.preventDefault();
+      removeCard();
+    }
+  };
 
+  var onCardMouseClick = function (evt) {
+    if (evt.target.classList.contains('popup__close')) {
+      removeCard();
+    }
+  };
+
+  var removeCard = function () {
+    if (!activeCard) {
+      return;
+    }
+    document.removeEventListener('keydown', onCardEscPress);
+    activeCard.removeEventListener('click', onCardMouseClick);
+    activeCard.remove();
+    activePin.classList.remove('map__pin--active');
+    activeCard = null;
+    activePin = null;
+  };
+
+
+  var addCardEventListeners = function () {
+    document.addEventListener('keydown', onCardEscPress);
+    activeCard.addEventListener('click', onCardMouseClick);
+  };
+
+  var createCard = function (cardData) {
     var template = cardTemplate.cloneNode(true).content;
     var avatar = template.querySelector('.popup__avatar');
     var title = template.querySelector('.popup__title');
@@ -30,6 +63,29 @@ window.card = (function () {
     var features = template.querySelector('.popup__features');
     var description = template.querySelector('.popup__description');
     var photos = template.querySelector('.popup__photos');
+
+    var addFeatures = function () {
+      features.innerHTML = '';
+      cardData.offer.features.forEach(function (feature) {
+        var li = document.createElement('li');
+        li.classList.add('popup__feature', 'popup__feature--' + feature);
+        features.appendChild(li);
+      });
+    };
+
+    var addPhotos = function () {
+      photos.innerHTML = '';
+      cardData.offer.photos.forEach(function (photoSrc) {
+        var img = document.createElement('img');
+        img.src = photoSrc;
+        img.classList.add('popup__photo');
+        img.alt = 'Фотография жилья';
+        img.width = PHOTO_WIDTH;
+        img.height = PHOTO_HEIGHT;
+        photos.appendChild(img);
+      });
+    };
+
 
     if (cardData.offer.title) {
       title.textContent = cardData.offer.title;
@@ -52,7 +108,7 @@ window.card = (function () {
     if (cardData.offer.rooms && cardData.offer.guests) {
       capacity.textContent = cardData.offer.rooms + ' комнаты для ' + cardData.offer.guests + ' гостей';
     } else {
-      hideBlock(title);
+      hideBlock(capacity);
     }
 
     if (cardData.offer.checkin && cardData.offer.checkout) {
@@ -79,27 +135,6 @@ window.card = (function () {
       hideBlock(avatar);
     }
 
-    var addFeatures = function (featuresArr) {
-      features.innerHTML = '';
-      featuresArr.forEach(function (feature) {
-        var li = document.createElement('li');
-        li.classList.add('popup__feature', 'popup__feature--' + feature);
-        features.appendChild(li);
-      });
-    };
-
-    var addPhotos = function (photosArr) {
-      photos.innerHTML = '';
-      photosArr.forEach(function (photoSrc) {
-        var img = document.createElement('img');
-        img.src = photoSrc;
-        img.classList.add('popup__photo');
-        img.alt = 'Фотография жилья';
-        img.width = PHOTO_WIDTH;
-        img.height = PHOTO_HEIGHT;
-        photos.appendChild(img);
-      });
-    };
 
     if (cardData.offer.photos && cardData.offer.photos.length) {
       addPhotos(cardData.offer.photos);
@@ -116,13 +151,21 @@ window.card = (function () {
     return template;
   };
 
-  var renderCard = function (cardData) {
+  var renderCard = function (cardData, pin) {
+    if (activeCard) {
+      removeCard();
+    }
+
     var card = createCard(cardData);
+    activeCard = card.querySelector('.map__card');
+    activePin = pin;
+    addCardEventListeners();
     window.map.mapForm.before(card);
   };
 
   return {
-    renderCard: renderCard
+    renderCard: renderCard,
+    offerTypeDisplay: offerTypeDisplay
   };
 
 })();

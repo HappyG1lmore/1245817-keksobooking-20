@@ -1,10 +1,10 @@
 'use strict';
 
 window.form = (function () {
-  var DEFAULT_PIN_WIDTH = 65;
-  var DEFAULT_PIN_HEIGHT = 80;
-  var DEFAULT_PIN_LEFT = 570;
-  var DEFAULT_PIN_TOP = 375;
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_HEIGHT = 80;
+  var MAIN_PIN_INITIAL_X = 570;
+  var MAIN_PIN_INITIAL_Y = 375;
 
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
@@ -12,9 +12,27 @@ window.form = (function () {
   var rooms = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
 
+  var price = adForm.querySelector('#price');
+  var type = adForm.querySelector('#type');
+  var timein = adForm.querySelector('#timein');
+  var timeout = adForm.querySelector('#timeout');
+
+  var minPriceLimit = {
+    'palace': 10000,
+    'flat': 1000,
+    'bungalo': 0,
+    'house': 5000
+  };
+
   adForm.addEventListener('change', function (evt) {
     if (evt.target === rooms || evt.target === capacity) {
       validateCapacity();
+    } else if (evt.target === price || evt.target === type) {
+      validateTypeOfHousing();
+    } else if (evt.target === timein) {
+      validateTimeIn();
+    } else if (evt.target === timeout) {
+      validateTimeOut();
     }
     adForm.reportValidity('');
   });
@@ -26,24 +44,22 @@ window.form = (function () {
     });
   };
 
-  // вызвал функцию добавления атрибута disabled
   var disableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = true;
     });
   };
 
-  // Футкция, адрес первого дефолтного пина (элипс)
-  var setInitialAddress = function () {
-    address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - (DEFAULT_PIN_HEIGHT / 2));
+  var setAddress = function (mainPinX, mainPinY) {
+    var x = typeof mainPinX === 'number' ? mainPinX : MAIN_PIN_INITIAL_X;
+    var y = typeof mainPinY === 'number' ? mainPinY : MAIN_PIN_INITIAL_Y;
+
+    var offsetX = MAIN_PIN_WIDTH / 2;
+    var offsetY = window.isAppActive ? MAIN_PIN_HEIGHT : MAIN_PIN_HEIGHT / 2;
+
+    address.value = Math.round((x + offsetX)) + ', ' + Math.round((y + offsetY));
   };
 
-  // Функция, поле адреса при активации формы
-  var setActiveAddress = function () {
-    address.value = (DEFAULT_PIN_LEFT - (DEFAULT_PIN_WIDTH / 2)) + ', ' + (DEFAULT_PIN_TOP - DEFAULT_PIN_HEIGHT);
-  };
-
-  // Функция валидации
   var validateCapacity = function () {
     var error = '';
     if (rooms.value === '1' && capacity.value !== '1') {
@@ -58,17 +74,24 @@ window.form = (function () {
     capacity.setCustomValidity(error);
   };
 
+  var validateTypeOfHousing = function () {
+    var typeOfHousing = type.value;
+    price.setAttribute('min', minPriceLimit[typeOfHousing]);
+    price.placeholder = minPriceLimit[typeOfHousing];
+  };
+
+  var validateTimeIn = function () {
+    timeout.value = timein.value;
+  };
+
+  var validateTimeOut = function () {
+    timein.value = timeout.value;
+  };
+
   return {
     enableAdForm: enableAdForm,
     disableAdForm: disableAdForm,
-    setInitialAddress: setInitialAddress,
-    setActiveAddress: setActiveAddress,
-    validateCapacity: validateCapacity,
-    adForm: adForm,
-    adFormFieldsets: adFormFieldsets,
-    address: address,
-    rooms: rooms,
-    capacity: capacity
+    setAddress: setAddress
   };
 })();
 

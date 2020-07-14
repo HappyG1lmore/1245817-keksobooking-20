@@ -1,6 +1,10 @@
 'use strict';
 
 window.utils = (function () {
+  var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
+  var MOUSE_LBUTTON_KEYCODE = 0;
+
   var getRandomIntFromRange = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   };
@@ -9,7 +13,6 @@ window.utils = (function () {
     return array[getRandomIntFromRange(0, array.length - 1)];
   };
 
-  // массив случайной длинны
   var getRandomLengthArray = function (array) {
     var tempArray = [];
     for (var i = 0; i < getRandomIntFromRange(1, array.length); i++) {
@@ -18,36 +21,24 @@ window.utils = (function () {
     return tempArray;
   };
 
+  var isEnterPressed = function (evt) {
+    return evt.keyCode === ENTER_KEYCODE;
+  };
+
+  var isEscPressed = function (evt) {
+    return evt.keyCode === ESC_KEYCODE;
+  };
+
+  var isMouseLeftPressed = function (evt) {
+    return evt.button === MOUSE_LBUTTON_KEYCODE;
+  };
+
   return {
     getRandomIntFromRange: getRandomIntFromRange,
     getRandomArrayItem: getRandomArrayItem,
-    getRandomLengthArray: getRandomLengthArray
+    getRandomLengthArray: getRandomLengthArray,
+    isEnterPressed: isEnterPressed,
+    isEscPressed: isEscPressed,
+    isMouseLeftPressed: isMouseLeftPressed
   };
 })();
-
-
-/*
-window.random = (function () {
-
-  return {
-    getRandomIntFromRange: function (min, max) {
-      return Math.floor(min + Math.random() * (max + 1 - min));
-    },
-
-    getRandomArrayItem: function (array) {
-      return array[window.random.getRandomIntFromRange(0, array.length - 1)];
-    },
-
-    // массив случайной длинны
-    getRandomLengthArray: function (array) {
-      var tempArray = [];
-      for (var i = 0; i < window.random.getRandomIntFromRange(1, array.length); i++) {
-        tempArray.push(array[window.random.getRandomIntFromRange(0, array.length - 1)]);
-      }
-      return tempArray;
-    }
-  };
-})();
-*/
-
-

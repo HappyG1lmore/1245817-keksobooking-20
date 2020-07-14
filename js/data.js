@@ -30,6 +30,7 @@ window.data = (function () {
 
     for (var i = 0; i < AMOUNT_ADS; i++) {
       result.push({
+        id: i,
         author: {
           avatar: 'img/avatars/user0' + (i + 1) + '.png'
         },
@@ -56,7 +57,6 @@ window.data = (function () {
   };
 
   var announcements = createAnnouncements();
-  console.log(announcements[0].offer.type);
   return {
     announcements: announcements,
   };
