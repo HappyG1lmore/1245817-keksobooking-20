@@ -25,6 +25,8 @@ window.data = (function () {
   var MAX_GUESTS = 6;
   var AMOUNT_ADS = 8;
 
+
+
   var createAnnouncements = function () {
     var result = [];
 
@@ -57,6 +59,7 @@ window.data = (function () {
   };
 
   var announcements = createAnnouncements();
+
   return {
     announcements: announcements,
   };
