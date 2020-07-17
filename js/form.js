@@ -17,8 +17,6 @@ window.form = (function () {
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
 
-
-
   var minPriceLimit = {
     'palace': 10000,
     'flat': 1000,
