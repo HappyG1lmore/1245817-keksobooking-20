@@ -13,7 +13,13 @@ var enableApp = function () {
   window.form.enableAdForm();
   window.map.mainMap.classList.remove('map--faded');
   window.form.setAddress();
-  window.pin.renderPins(window.data.announcements);
+  window.backend.loadAdverts(
+      function (data) {
+        console.log(data);
+        window.appState.advertsData = data;
+        window.pin.renderPins(data);
+      }
+  );
   window.map.mainMap.addEventListener('click', onMapClick);
 };
 
@@ -22,7 +28,7 @@ var onMapClick = function (evt) {
 
   if (pin && !pin.classList.contains('map__pin--main') && !pin.classList.contains('map__pin--active')) {
     pin.classList.add('map__pin--active');
-    window.card.renderCard(window.data.announcements[pin.dataset.id], pin);
+    window.card.renderCard(window.appState.advertsData[pin.dataset.id], pin);
   }
 };
 

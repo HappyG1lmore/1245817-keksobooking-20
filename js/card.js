@@ -45,7 +45,6 @@ window.card = (function () {
     activePin = null;
   };
 
-
   var addCardEventListeners = function () {
     document.addEventListener('keydown', onCardEscPress);
     activeCard.addEventListener('click', onCardMouseClick);

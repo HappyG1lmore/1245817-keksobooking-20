@@ -57,6 +57,7 @@ window.data = (function () {
   };
 
   var announcements = createAnnouncements();
+
   return {
     announcements: announcements,
   };

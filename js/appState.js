@@ -1,4 +1,13 @@
 'use strict';
 
-window.isAppActive = false;
+window.appState = (function () {
+  var isAppActive = false;
+  var advertsData;
 
+  return {
+    isAppActive: isAppActive,
+    advertsData: advertsData
+  };
+
+
+})();

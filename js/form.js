@@ -88,11 +88,17 @@ window.form = (function () {
     timein.value = timeout.value;
   };
 
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(adForm), function (response) {
+    // тут как я понимаю должна быть логика возврата приложения в начальное состояние
+    // а еще должна отрендерится окошко сообщение об успешной отправке??
+    });
+    evt.preventDefault();
+  });
+
   return {
     enableAdForm: enableAdForm,
     disableAdForm: disableAdForm,
     setAddress: setAddress
   };
 })();
-
-
