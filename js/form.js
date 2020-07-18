@@ -11,11 +11,19 @@ window.form = (function () {
   var address = adForm.querySelector('#address');
   var rooms = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
+  var resetButton = adForm.querySelector('.ad-form__reset');
 
   var price = adForm.querySelector('#price');
   var type = adForm.querySelector('#type');
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
+
+  var main = document.querySelector('main');
+  var succesPopupTemplate = document.querySelector('#success');
+  var errorPopupTemplate = document.querySelector('#error');
+
+  var activePopupSucces;
+  var activePopupError;
 
   var minPriceLimit = {
     'palace': 10000,
@@ -25,14 +33,25 @@ window.form = (function () {
   };
 
   adForm.addEventListener('change', function (evt) {
-    if (evt.target === rooms || evt.target === capacity) {
-      validateCapacity();
-    } else if (evt.target === price || evt.target === type) {
-      validateTypeOfHousing();
-    } else if (evt.target === timein) {
-      validateTimeIn();
-    } else if (evt.target === timeout) {
-      validateTimeOut();
+    switch (evt.target) {
+      case rooms:
+        validateCapacity();
+        break;
+      case capacity:
+        validateCapacity();
+        break;
+      case price:
+        validateTypeOfHousing();
+        break;
+      case type:
+        validateTypeOfHousing();
+        break;
+      case timein:
+        validateTimeIn();
+        break;
+      case timeout:
+        validateTimeOut();
+        break;
     }
     adForm.reportValidity('');
   });
@@ -41,13 +60,87 @@ window.form = (function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
       adForm.classList.remove('ad-form--disabled');
+      resetButton.addEventListener('click', onResetMouseLeftPressed);
     });
   };
 
   var disableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = true;
+      adForm.classList.add('ad-form--disabled');
+      resetButton.removeEventListener('click', onResetMouseLeftPressed);
     });
+  };
+
+  var onPopapEscPress = function (evt) {
+    if (window.utils.isEscPressed(evt)) {
+      if (activePopupSucces) {
+        removeSuccessPopup();
+      } else {
+        removeErrorPopup();
+
+      }
+    }
+  };
+
+  var onResetMouseLeftPressed = function (evt) {
+    if (window.utils.isMouseLeftPressed(evt)) {
+      window.disableApp();
+    }
+  };
+
+  var onPopapMouseLeftPressed = function (evt) {
+    if (window.utils.isMouseLeftPressed(evt)) {
+      if (activePopupSucces) {
+        if (event.target.classList.value === 'success') {
+          removeSuccessPopup();
+        }
+      } else {
+        if (event.target.classList.value === 'error' || event.target.classList.value === 'error__button') {
+          removeErrorPopup();
+        }
+      }
+    }
+  };
+
+  var removeSuccessPopup = function () {
+    var successPopupToRemove = main.querySelector('.success');
+    successPopupToRemove.remove();
+    activePopupSucces = false;
+    document.removeEventListener('keydown', onPopapEscPress);
+    document.removeEventListener('click', onPopapMouseLeftPressed);
+  };
+
+  var removeErrorPopup = function () {
+    var errorPopupToRemove = main.querySelector('.error');
+    errorPopupToRemove.remove();
+    activePopupError = false;
+    document.removeEventListener('keydown', onPopapEscPress);
+    document.removeEventListener('click', onPopapMouseLeftPressed);
+  };
+
+  var showSuccessPopup = function () {
+    if (activePopupSucces) {
+      return;
+    }
+    activePopupSucces = true;
+    var template = succesPopupTemplate.cloneNode(true).content;
+    var successPopup = template.querySelector('.success');
+    main.appendChild(successPopup);
+    document.addEventListener('click', onPopapMouseLeftPressed);
+    document.addEventListener('keydown', onPopapEscPress);
+  };
+
+  var showErrorPopup = function () {
+    if (activePopupError) {
+      return;
+    }
+    activePopupError = true;
+    var template = errorPopupTemplate.cloneNode(true).content;
+    var errorPopup = template.querySelector('.error');
+    main.appendChild(errorPopup);
+    document.addEventListener('click', onPopapMouseLeftPressed);
+    document.addEventListener('keydown', onPopapEscPress);
   };
 
   var setAddress = function (mainPinX, mainPinY) {
@@ -88,17 +181,12 @@ window.form = (function () {
     timein.value = timeout.value;
   };
 
-  adForm.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(adForm), function (response) {
-    // тут как я понимаю должна быть логика возврата приложения в начальное состояние
-    // а еще должна отрендерится окошко сообщение об успешной отправке??
-    });
-    evt.preventDefault();
-  });
-
   return {
     enableAdForm: enableAdForm,
     disableAdForm: disableAdForm,
-    setAddress: setAddress
+    setAddress: setAddress,
+    adForm: adForm,
+    showErrorPopup: showErrorPopup,
+    showSuccessPopup: showSuccessPopup
   };
 })();
