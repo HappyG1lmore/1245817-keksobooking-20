@@ -6,10 +6,10 @@ var initApp = function () {
 };
 
 var enableApp = function () {
-  if (window.isAppActive) {
+  if (window.appState.isAppActive) {
     return;
   }
-  window.isAppActive = true;
+  window.appState.isAppActive = true;
   window.form.enableAdForm();
   window.map.mainMap.classList.remove('map--faded');
   window.form.setAddress();
@@ -25,7 +25,7 @@ var enableApp = function () {
 var disableApp = function () {
   window.pin.removePins();
   window.pin.resetMainPinPosition();
-  window.isAppActive = false;
+  window.appState.isAppActive = false;
   window.form.disableAdForm();
   window.map.mainMap.classList.add('map--faded');
   window.form.setAddress();
