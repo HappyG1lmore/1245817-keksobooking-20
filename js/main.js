@@ -24,7 +24,7 @@ var enableApp = function () {
 
 var disableApp = function () {
   window.pin.removePins();
-  window.pin.movesPinDefault();
+  window.pin.resetMainPinPosition();
   window.isAppActive = false;
   window.form.disableAdForm();
   window.map.mainMap.classList.add('map--faded');
@@ -53,24 +53,35 @@ var onPinEnterPress = function (evt) {
   }
 };
 
+var onPopupMouseLeftPressed = function (evt) {
+  if (window.utils.isMouseLeftPressed(evt)) {
+    if (event.target.tagName !== 'P' || event.target.classList.contains('error__button')) {
+      window.popups.removePopup();
+    }
+  }
+};
+
+var onPopupEscPress = function (evt) {
+  if (window.utils.isEscPressed(evt)) {
+    window.popups.removePopup();
+  }
+};
+
 var onSuccesSubmit = function () {
   disableApp();
-  window.form.showSuccessPopup();
+  window.popups.showSuccessPopup();
+  document.addEventListener('click', onPopupMouseLeftPressed);
+  document.addEventListener('keydown', onPopupEscPress);
 };
 
 var onErrorSubmit = function () {
-  window.form.showErrorPopup();
+  window.popups.showErrorPopup();
+  document.addEventListener('click', onPopupMouseLeftPressed);
+  document.addEventListener('keydown', onPopupEscPress);
 };
 
 window.map.mainPin.addEventListener('mousedown', onPinMouseClick);
 window.map.mainPin.addEventListener('keydown', onPinEnterPress);
-
-var clickClick = function (evt) {
-  if (window.utils.isMouseLeftPressed(evt)) {
-    console.log('Событие по клику для тренировки, УДАЛЮ СКОРО');
-  }
-};
-document.addEventListener('click', clickClick);
 
 window.form.adForm.addEventListener('submit', function (evt) {
   evt.preventDefault();

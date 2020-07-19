@@ -3,8 +3,8 @@
 window.pin = (function () {
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var PIN_DEFAULT_LEFT = 570;
-  var PIN_DEFAULT_TOP = 375;
+  var MAIN_PIN_DEFAULT_LEFT = 570;
+  var MAIN_PIN_DEFAULT_TOP = 375;
 
   var pinTemplate = document.querySelector('#pin');
   var pinsMap = document.querySelector('.map__pins');
@@ -45,15 +45,15 @@ window.pin = (function () {
     });
   };
 
-  var movesPinDefault = function () {
-    window.map.mainPin.style.top = PIN_DEFAULT_TOP + 'px';
-    window.map.mainPin.style.left = PIN_DEFAULT_LEFT + 'px';
+  var resetMainPinPosition = function () {
+    window.map.mainPin.style.top = MAIN_PIN_DEFAULT_TOP + 'px';
+    window.map.mainPin.style.left = MAIN_PIN_DEFAULT_LEFT + 'px';
   };
 
   return {
     renderPins: renderPins,
     removePins: removePins,
-    movesPinDefault: movesPinDefault
+    resetMainPinPosition: resetMainPinPosition
   };
 
 })();
