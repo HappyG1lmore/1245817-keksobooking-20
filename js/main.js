@@ -25,6 +25,7 @@ var enableApp = function () {
 var disableApp = function () {
   window.pin.removePins();
   window.pin.resetMainPinPosition();
+  window.card.removeCard();
   window.appState.isAppActive = false;
   window.form.disableAdForm();
   window.map.mainMap.classList.add('map--faded');
