@@ -51,6 +51,7 @@ window.form = (function () {
     }
   };
 
+
   var enableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;

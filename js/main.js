@@ -69,6 +69,7 @@ var onPopupEscPress = function (evt) {
 
 var onSuccesSubmit = function () {
   disableApp();
+  window.form.adForm.reset();
   window.popups.showSuccessPopup();
   document.addEventListener('click', onPopupMouseLeftPressed);
   document.addEventListener('keydown', onPopupEscPress);
