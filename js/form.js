@@ -45,19 +45,11 @@ window.form = (function () {
     adForm.reportValidity('');
   });
 
-  var inResetClick = function (evt) {
-    if (window.utils.isMouseLeftPressed(evt)) {
-      window.disableApp();
-    }
-  };
-
-
   var enableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
     });
     adForm.classList.remove('ad-form--disabled');
-    resetButton.addEventListener('click', inResetClick);
   };
 
   var disableAdForm = function () {
@@ -65,7 +57,6 @@ window.form = (function () {
       fieldset.disabled = true;
     });
     adForm.classList.add('ad-form--disabled');
-    resetButton.removeEventListener('click', inResetClick);
   };
 
   var setAddress = function (mainPinX, mainPinY) {
@@ -111,5 +102,6 @@ window.form = (function () {
     disableAdForm: disableAdForm,
     setAddress: setAddress,
     adForm: adForm,
+    resetButton: resetButton
   };
 })();

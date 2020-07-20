@@ -7,7 +7,6 @@ window.popups = (function () {
   var main = document.querySelector('main');
   var activePopup = '';
 
-
   var showSuccessPopup = function () {
     if (activePopup) {
       return;
@@ -15,7 +14,9 @@ window.popups = (function () {
     var template = succesPopupTemplate.cloneNode(true).content;
     var successPopup = template.querySelector('.success');
     main.appendChild(successPopup);
-    activePopup = main.querySelector('.success');
+    activePopup = successPopup;
+    document.addEventListener('click', onPopupMouseLeftPressed);
+    document.addEventListener('keydown', onPopupEscPress);
   };
 
   var showErrorPopup = function () {
@@ -25,21 +26,35 @@ window.popups = (function () {
     var template = errorPopupTemplate.cloneNode(true).content;
     var errorPopup = template.querySelector('.error');
     main.appendChild(errorPopup);
-    activePopup = main.querySelector('.error');
+    activePopup = errorPopup;
+    document.addEventListener('click', onPopupMouseLeftPressed);
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+  var onPopupMouseLeftPressed = function (evt) {
+    if (window.utils.isMouseLeftPressed(evt)) {
+      if (event.target.tagName !== 'P' || event.target.classList.contains('error__button')) {
+        removePopup();
+      }
+    }
+  };
+
+  var onPopupEscPress = function (evt) {
+    if (window.utils.isEscPressed(evt)) {
+      removePopup();
+    }
   };
 
   var removePopup = function () {
     activePopup.remove();
     activePopup = null;
-    document.removeEventListener('keydown', window.onPopupEscPress);
-    document.removeEventListener('click', window.onPopupMouseLeftPressed);
+    document.removeEventListener('keydown', onPopupEscPress);
+    document.removeEventListener('click', onPopupMouseLeftPressed);
   };
 
   return {
     showSuccessPopup: showSuccessPopup,
     showErrorPopup: showErrorPopup,
-    removePopup: removePopup
   };
-
 
 })();
