@@ -11,6 +11,7 @@ window.form = (function () {
   var address = adForm.querySelector('#address');
   var rooms = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
+  var resetButton = adForm.querySelector('.ad-form__reset');
 
   var price = adForm.querySelector('#price');
   var type = adForm.querySelector('#type');
@@ -25,14 +26,21 @@ window.form = (function () {
   };
 
   adForm.addEventListener('change', function (evt) {
-    if (evt.target === rooms || evt.target === capacity) {
-      validateCapacity();
-    } else if (evt.target === price || evt.target === type) {
-      validateTypeOfHousing();
-    } else if (evt.target === timein) {
-      validateTimeIn();
-    } else if (evt.target === timeout) {
-      validateTimeOut();
+    switch (evt.target) {
+      case rooms:
+      case capacity:
+        validateCapacity();
+        break;
+      case price:
+      case type:
+        validateTypeOfHousing();
+        break;
+      case timein:
+        validateTimeIn();
+        break;
+      case timeout:
+        validateTimeOut();
+        break;
     }
     adForm.reportValidity('');
   });
@@ -40,14 +48,15 @@ window.form = (function () {
   var enableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = false;
-      adForm.classList.remove('ad-form--disabled');
     });
+    adForm.classList.remove('ad-form--disabled');
   };
 
   var disableAdForm = function () {
     adFormFieldsets.forEach(function (fieldset) {
       fieldset.disabled = true;
     });
+    adForm.classList.add('ad-form--disabled');
   };
 
   var setAddress = function (mainPinX, mainPinY) {
@@ -88,17 +97,11 @@ window.form = (function () {
     timein.value = timeout.value;
   };
 
-  adForm.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(adForm), function (response) {
-    // тут как я понимаю должна быть логика возврата приложения в начальное состояние
-    // а еще должна отрендерится окошко сообщение об успешной отправке??
-    });
-    evt.preventDefault();
-  });
-
   return {
     enableAdForm: enableAdForm,
     disableAdForm: disableAdForm,
-    setAddress: setAddress
+    setAddress: setAddress,
+    adForm: adForm,
+    resetButton: resetButton
   };
 })();

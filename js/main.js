@@ -6,21 +6,39 @@ var initApp = function () {
 };
 
 var enableApp = function () {
-  if (window.isAppActive) {
+  if (window.appState.isAppActive) {
     return;
   }
-  window.isAppActive = true;
+  window.appState.isAppActive = true;
   window.form.enableAdForm();
+  window.form.resetButton.addEventListener('click', onResetClick);
   window.map.mainMap.classList.remove('map--faded');
   window.form.setAddress();
   window.backend.loadAdverts(
       function (data) {
-        console.log(data);
         window.appState.advertsData = data;
         window.pin.renderPins(data);
       }
   );
   window.map.mainMap.addEventListener('click', onMapClick);
+};
+
+var disableApp = function () {
+  window.pin.removePins();
+  window.pin.resetMainPinPosition();
+  window.card.removeCard();
+  window.appState.isAppActive = false;
+  window.form.disableAdForm();
+  window.form.resetButton.removeEventListener('click', onResetClick);
+  window.map.mainMap.classList.add('map--faded');
+  window.form.setAddress();
+  window.map.mainMap.removeEventListener('click', onMapClick);
+};
+
+var onResetClick = function (evt) {
+  if (window.utils.isMouseLeftPressed(evt)) {
+    window.disableApp();
+  }
 };
 
 var onMapClick = function (evt) {
@@ -32,17 +50,35 @@ var onMapClick = function (evt) {
   }
 };
 
-window.map.mainPin.addEventListener('mousedown', function (evt) {
+var onPinMouseClick = function (evt) {
   if (window.utils.isMouseLeftPressed(evt)) {
     enableApp();
   }
-});
+};
 
-window.map.mainPin.addEventListener('keydown', function (evt) {
+var onPinEnterPress = function (evt) {
   if (window.utils.isEnterPressed(evt)) {
     enableApp();
   }
-});
+};
 
+var onSuccesSubmit = function () {
+  disableApp();
+  window.form.adForm.reset();
+  window.popups.showSuccessPopup();
+};
+
+var onErrorSubmit = function () {
+  window.popups.showErrorPopup();
+};
+
+window.map.mainPin.addEventListener('mousedown', onPinMouseClick);
+window.map.mainPin.addEventListener('keydown', onPinEnterPress);
+
+window.form.adForm.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  var formData = new FormData(window.form.adForm);
+  window.backend.uploadAdvert(onSuccesSubmit, onErrorSubmit, formData);
+});
 
 initApp();

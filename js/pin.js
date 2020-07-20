@@ -3,6 +3,8 @@
 window.pin = (function () {
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var MAIN_PIN_DEFAULT_LEFT = 570;
+  var MAIN_PIN_DEFAULT_TOP = 375;
 
   var pinTemplate = document.querySelector('#pin');
   var pinsMap = document.querySelector('.map__pins');
@@ -34,9 +36,24 @@ window.pin = (function () {
     pinsMap.appendChild(fragment);
   };
 
+  var removePins = function () {
+    var pinsAll = pinsMap.querySelectorAll('.map__pin');
+    pinsAll.forEach(function (pin) {
+      if (!pin.classList.contains('map__pin--main')) {
+        pin.remove();
+      }
+    });
+  };
+
+  var resetMainPinPosition = function () {
+    window.map.mainPin.style.top = MAIN_PIN_DEFAULT_TOP + 'px';
+    window.map.mainPin.style.left = MAIN_PIN_DEFAULT_LEFT + 'px';
+  };
 
   return {
     renderPins: renderPins,
+    removePins: removePins,
+    resetMainPinPosition: resetMainPinPosition
   };
 
 })();

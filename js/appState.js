@@ -9,5 +9,4 @@ window.appState = (function () {
     advertsData: advertsData
   };
 
-
 })();

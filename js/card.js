@@ -164,7 +164,8 @@ window.card = (function () {
 
   return {
     renderCard: renderCard,
-    offerTypeDisplay: offerTypeDisplay
+    offerTypeDisplay: offerTypeDisplay,
+    removeCard: removeCard
   };
 
 })();
