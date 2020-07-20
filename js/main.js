@@ -11,7 +11,7 @@ var enableApp = function () {
   }
   window.appState.isAppActive = true;
   window.form.enableAdForm();
-  window.form.resetButton.addEventListener('click', inResetClick);
+  window.form.resetButton.addEventListener('click', onResetClick);
   window.map.mainMap.classList.remove('map--faded');
   window.form.setAddress();
   window.backend.loadAdverts(
@@ -29,13 +29,13 @@ var disableApp = function () {
   window.card.removeCard();
   window.appState.isAppActive = false;
   window.form.disableAdForm();
-  window.form.resetButton.removeEventListener('click', inResetClick);
+  window.form.resetButton.removeEventListener('click', onResetClick);
   window.map.mainMap.classList.add('map--faded');
   window.form.setAddress();
   window.map.mainMap.removeEventListener('click', onMapClick);
 };
 
-var inResetClick = function (evt) {
+var onResetClick = function (evt) {
   if (window.utils.isMouseLeftPressed(evt)) {
     window.disableApp();
   }
