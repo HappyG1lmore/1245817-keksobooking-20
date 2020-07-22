@@ -18,7 +18,7 @@ window.form = (function () {
   var timein = adForm.querySelector('#timein');
   var timeout = adForm.querySelector('#timeout');
 
-  var minPriceLimit = {
+  var minPriceLimitMap = {
     'palace': 10000,
     'flat': 1000,
     'bungalo': 0,
@@ -85,8 +85,8 @@ window.form = (function () {
 
   var validateTypeOfHousing = function () {
     var typeOfHousing = type.value;
-    price.setAttribute('min', minPriceLimit[typeOfHousing]);
-    price.placeholder = minPriceLimit[typeOfHousing];
+    price.setAttribute('min', minPriceLimitMap[typeOfHousing]);
+    price.placeholder = minPriceLimitMap[typeOfHousing];
   };
 
   var validateTimeIn = function () {

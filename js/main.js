@@ -11,13 +11,15 @@ var enableApp = function () {
   }
   window.appState.isAppActive = true;
   window.form.enableAdForm();
+  window.filters.disableFilter();
   window.form.resetButton.addEventListener('click', onResetClick);
   window.map.mainMap.classList.remove('map--faded');
   window.form.setAddress();
   window.backend.loadAdverts(
       function (data) {
         window.appState.advertsData = data;
-        window.pin.renderPins(data);
+        window.filters.enableFilter();
+        window.filters.applyFilters();
       }
   );
   window.map.mainMap.addEventListener('click', onMapClick);
@@ -53,6 +55,12 @@ var onMapClick = function (evt) {
 var onPinMouseClick = function (evt) {
   if (window.utils.isMouseLeftPressed(evt)) {
     enableApp();
+
+    window.backend.loadAdverts(
+        function (data) {
+          window.appState.advertsData = data;
+        }
+    );
   }
 };
 
