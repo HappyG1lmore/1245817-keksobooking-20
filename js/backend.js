@@ -56,6 +56,8 @@ window.backend = (function () {
 
     xhr.open(method, url);
     return xhr;
+
+
   };
 
   var loadAdverts = function (onSuccess, onError) {
@@ -63,7 +65,9 @@ window.backend = (function () {
       data.forEach(function (item, index) {
         item.id = index;
       });
+
       onSuccess(data);
+
     };
     createXhr('GET', URL_LOAD, onSuccessWrapper, onError).send();
   };
@@ -74,7 +78,7 @@ window.backend = (function () {
 
   return {
     uploadAdvert: uploadAdvert,
-    loadAdverts: loadAdverts
+    loadAdverts: loadAdverts,
   };
 
 })();

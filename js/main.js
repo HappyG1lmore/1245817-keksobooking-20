@@ -3,6 +3,7 @@
 var initApp = function () {
   window.form.disableAdForm();
   window.form.setAddress();
+  window.filters.disableFilter();
 };
 
 var enableApp = function () {
@@ -17,7 +18,8 @@ var enableApp = function () {
   window.backend.loadAdverts(
       function (data) {
         window.appState.advertsData = data;
-        window.pin.renderPins(data);
+        window.filters.enableFilter();
+        window.filters.applyFilters();
       }
   );
   window.map.mainMap.addEventListener('click', onMapClick);
@@ -29,6 +31,7 @@ var disableApp = function () {
   window.card.removeCard();
   window.appState.isAppActive = false;
   window.form.disableAdForm();
+  window.filters.disableFilter();
   window.form.resetButton.removeEventListener('click', onResetClick);
   window.map.mainMap.classList.add('map--faded');
   window.form.setAddress();
