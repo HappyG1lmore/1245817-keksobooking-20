@@ -7,9 +7,6 @@ window.filters = (function () {
   var filterForm = document.querySelector('.map__filters');
   var filtersSelect = filterForm.querySelectorAll('select');
   var typeFilter = filterForm.querySelector('#housing-type');
-  var priceFilter = filterForm.querySelector('#housing-price');
-  var roomsFilter = filterForm.querySelector('#housing-rooms');
-  var guestsFilter = filterForm.querySelector('#housing-guests');
   var featuresFilter = filterForm.querySelector('#housing-features');
 
   var enableFilter = function () {
@@ -30,6 +27,7 @@ window.filters = (function () {
 
   var applyFilters = function () {
     window.pin.removePins();
+    window.card.removeCard();
     var filteredData = window.appState.advertsData.filter(function (advert) {
       return filterByType(advert);
     });

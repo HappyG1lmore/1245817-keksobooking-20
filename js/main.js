@@ -3,6 +3,7 @@
 var initApp = function () {
   window.form.disableAdForm();
   window.form.setAddress();
+  window.filters.disableFilter();
 };
 
 var enableApp = function () {
@@ -11,7 +12,6 @@ var enableApp = function () {
   }
   window.appState.isAppActive = true;
   window.form.enableAdForm();
-  window.filters.disableFilter();
   window.form.resetButton.addEventListener('click', onResetClick);
   window.map.mainMap.classList.remove('map--faded');
   window.form.setAddress();
@@ -31,6 +31,7 @@ var disableApp = function () {
   window.card.removeCard();
   window.appState.isAppActive = false;
   window.form.disableAdForm();
+  window.filters.disableFilter();
   window.form.resetButton.removeEventListener('click', onResetClick);
   window.map.mainMap.classList.add('map--faded');
   window.form.setAddress();
@@ -55,12 +56,6 @@ var onMapClick = function (evt) {
 var onPinMouseClick = function (evt) {
   if (window.utils.isMouseLeftPressed(evt)) {
     enableApp();
-
-    window.backend.loadAdverts(
-        function (data) {
-          window.appState.advertsData = data;
-        }
-    );
   }
 };
 
