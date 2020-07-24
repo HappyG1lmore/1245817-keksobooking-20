@@ -33,7 +33,7 @@ window.popups = (function () {
 
   var onPopupMouseLeftPressed = function (evt) {
     if (window.utils.isMouseLeftPressed(evt)) {
-      if (event.target.tagName !== 'P' || event.target.classList.contains('error__button')) {
+      if (evt.target.tagName !== 'P' || evt.target.classList.contains('error__button')) {
         removePopup();
       }
     }
