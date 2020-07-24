@@ -37,12 +37,12 @@ window.filters = (function () {
     if (filteredData.length > MAX_AMOUNT_PINS) {
       filteredData = filteredData.slice(ZERO, (MAX_AMOUNT_PINS));
     }
-   window.pin.renderPins(filteredData);
+    window.pin.renderPins(filteredData);
   };
 
-  var onChangeFilter = function () {
-    window.debounce.debounce(applyFilters());
-  };
+  var onChangeFilter = window.utils.debounce(function () {
+    applyFilters();
+  });
 
   var filterByType = function (advert) {
     var value = typeFilter.value;

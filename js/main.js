@@ -17,6 +17,7 @@ var enableApp = function () {
   window.form.setAddress();
   window.backend.loadAdverts(
       function (data) {
+        console.log(data);
         window.appState.advertsData = data;
         window.filters.enableFilter();
         window.filters.applyFilters();
@@ -26,6 +27,7 @@ var enableApp = function () {
 };
 
 var disableApp = function () {
+  window.form.adForm.reset();
   window.pin.removePins();
   window.pin.resetMainPinPosition();
   window.card.removeCard();
@@ -67,7 +69,6 @@ var onPinEnterPress = function (evt) {
 
 var onSuccesSubmit = function () {
   disableApp();
-  window.form.adForm.reset();
   window.popups.showSuccessPopup();
 };
 
