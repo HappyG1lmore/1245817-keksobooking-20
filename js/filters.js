@@ -4,6 +4,8 @@ window.filters = (function () {
   var MAX_AMOUNT_PINS = 5;
   var ZERO = 0;
   var DEBOUNCE_INTERVAL_FILTER = 500;
+  var LOWER_PRICE = 10000;
+  var UPPER_PRICE = 50000;
 
   var filterForm = document.querySelector('.map__filters');
   var filtersSelect = filterForm.querySelectorAll('select');
@@ -34,7 +36,7 @@ window.filters = (function () {
     window.pin.removePins();
     window.card.removeCard();
     var filteredData = window.appState.advertsData.filter(function (advert) {
-      return filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert) && filterByFeatures(advert);
+      return filterByOffer(advert) && filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert) && filterByFeatures(advert);
     });
     if (filteredData.length > MAX_AMOUNT_PINS) {
       filteredData = filteredData.slice(ZERO, (MAX_AMOUNT_PINS));
@@ -43,17 +45,10 @@ window.filters = (function () {
   };
 
   var resetFilters = function () {
-    filtersSelect.forEach(function (input) {
-      input.value = 'any';
-    });
-    for (var i = 0; i < housingFeatures.length; i++) {
-      housingFeatures[i].checked = false;
-    }
+    filterForm.reset();
   };
 
-  var onChangeFilter = window.utils.debounce(function () {
-    applyFilters();
-  }, DEBOUNCE_INTERVAL_FILTER);
+  var onChangeFilter = window.utils.debounce(applyFilters, DEBOUNCE_INTERVAL_FILTER);
 
   var filterByFeatures = function (advert) {
     for (var i = 0; i < housingFeatures.length; i++) {
@@ -79,11 +74,11 @@ window.filters = (function () {
     var value = priceFilter.value;
     switch (value) {
       case 'low':
-        return advert.offer.price === 10000;
+        return advert.offer.price <= LOWER_PRICE;
       case 'middle':
-        return advert.offer.price === 100;
+        return advert.offer.price >= LOWER_PRICE && advert.offer.price <= UPPER_PRICE;
       case 'high':
-        return advert.offer.price > 50000;
+        return advert.offer.price >= UPPER_PRICE;
     }
     return true;
   };
@@ -102,6 +97,10 @@ window.filters = (function () {
       return true;
     }
     return advert.offer.guests === Number(value);
+  };
+
+  var filterByOffer = function (advert) {
+    return Boolean(advert.offer);
   };
 
   return {
