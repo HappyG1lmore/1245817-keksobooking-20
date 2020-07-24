@@ -3,6 +3,7 @@
 window.filters = (function () {
   var MAX_AMOUNT_PINS = 5;
   var ZERO = 0;
+  var DEBOUNCE_INTERVAL_FILTER = 500;
 
   var filterForm = document.querySelector('.map__filters');
   var filtersSelect = filterForm.querySelectorAll('select');
@@ -11,6 +12,7 @@ window.filters = (function () {
   var guestsFilter = filterForm.querySelector('#housing-guests');
   var typeFilter = filterForm.querySelector('#housing-type');
   var featuresFilter = filterForm.querySelector('#housing-features');
+  var housingFeatures = filterForm.querySelectorAll('.map__checkbox');
 
   var enableFilter = function () {
     filtersSelect.forEach(function (select) {
@@ -32,7 +34,7 @@ window.filters = (function () {
     window.pin.removePins();
     window.card.removeCard();
     var filteredData = window.appState.advertsData.filter(function (advert) {
-      return filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert);
+      return filterByType(advert) && filterByPrice(advert) && filterByRooms(advert) && filterByGuests(advert) && filterByFeatures(advert);
     });
     if (filteredData.length > MAX_AMOUNT_PINS) {
       filteredData = filteredData.slice(ZERO, (MAX_AMOUNT_PINS));
@@ -40,9 +42,30 @@ window.filters = (function () {
     window.pin.renderPins(filteredData);
   };
 
+  var resetFilters = function () {
+    filtersSelect.forEach(function (input) {
+      input.value = 'any';
+    });
+    for (var i = 0; i < housingFeatures.length; i++) {
+      housingFeatures[i].checked = false;
+    }
+  };
+
   var onChangeFilter = window.utils.debounce(function () {
     applyFilters();
-  });
+  }, DEBOUNCE_INTERVAL_FILTER);
+
+  var filterByFeatures = function (advert) {
+    for (var i = 0; i < housingFeatures.length; i++) {
+      if (housingFeatures[i].checked) {
+        var element = housingFeatures[i].value;
+        if (advert.offer.features.indexOf(element) === -1) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
 
   var filterByType = function (advert) {
     var value = typeFilter.value;
@@ -85,6 +108,7 @@ window.filters = (function () {
     filterForm: filterForm,
     enableFilter: enableFilter,
     disableFilter: disableFilter,
-    applyFilters: applyFilters
+    applyFilters: applyFilters,
+    resetFilters: resetFilters
   };
 })();

@@ -17,7 +17,6 @@ var enableApp = function () {
   window.form.setAddress();
   window.backend.loadAdverts(
       function (data) {
-        console.log(data);
         window.appState.advertsData = data;
         window.filters.enableFilter();
         window.filters.applyFilters();

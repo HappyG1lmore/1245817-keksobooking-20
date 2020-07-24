@@ -4,9 +4,8 @@ window.utils = (function () {
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
   var MOUSE_LBUTTON_KEYCODE = 0;
-  var DEBOUNCE_INTERVAL = 500;
 
-  var debounce = function (cb) {
+  var debounce = function (cb, interval) {
     var lastTimeout = null;
 
     return function () {
@@ -16,7 +15,7 @@ window.utils = (function () {
       }
       lastTimeout = window.setTimeout(function () {
         cb.apply(null, parameters);
-      }, DEBOUNCE_INTERVAL);
+      }, interval);
     };
   };
 
@@ -55,6 +54,6 @@ window.utils = (function () {
     isEnterPressed: isEnterPressed,
     isEscPressed: isEscPressed,
     isMouseLeftPressed: isMouseLeftPressed,
-    debounce: debounce
+    debounce: debounce,
   };
 })();
