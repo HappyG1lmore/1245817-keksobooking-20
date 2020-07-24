@@ -5,6 +5,20 @@ window.utils = (function () {
   var ESC_KEYCODE = 27;
   var MOUSE_LBUTTON_KEYCODE = 0;
 
+  var debounce = function (cb, interval) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, interval);
+    };
+  };
+
   var getRandomIntFromRange = function (min, max) {
     return Math.floor(min + Math.random() * (max + 1 - min));
   };
@@ -39,6 +53,7 @@ window.utils = (function () {
     getRandomLengthArray: getRandomLengthArray,
     isEnterPressed: isEnterPressed,
     isEscPressed: isEscPressed,
-    isMouseLeftPressed: isMouseLeftPressed
+    isMouseLeftPressed: isMouseLeftPressed,
+    debounce: debounce,
   };
 })();

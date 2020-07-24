@@ -56,8 +56,6 @@ window.backend = (function () {
 
     xhr.open(method, url);
     return xhr;
-
-
   };
 
   var loadAdverts = function (onSuccess, onError) {

@@ -57,6 +57,7 @@ window.form = (function () {
       fieldset.disabled = true;
     });
     adForm.classList.add('ad-form--disabled');
+    window.filters.resetFilters();
   };
 
   var setAddress = function (mainPinX, mainPinY) {
