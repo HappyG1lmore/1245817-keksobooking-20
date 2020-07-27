@@ -40,10 +40,8 @@
     window.map.mainMap.removeEventListener('click', onMapClick);
   };
 
-  var onResetClick = function (evt) {
-    if (window.utils.isMouseLeftPressed(evt)) {
-      window.disableApp();
-    }
+  var onResetClick = function () {
+    disableApp();
   };
 
   var onMapClick = function (evt) {

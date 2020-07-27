@@ -1,6 +1,8 @@
 'use strict';
 
 window.popups = (function () {
+  var MODAL_CONTENT_TAG = 'P';
+
   var succesPopupTemplate = document.querySelector('#success');
   var errorPopupTemplate = document.querySelector('#error');
 
@@ -15,7 +17,7 @@ window.popups = (function () {
     var successPopup = template.querySelector('.success');
     main.appendChild(successPopup);
     activePopup = successPopup;
-    document.addEventListener('click', onPopupMouseLeftPressed);
+    document.addEventListener('click', onPopupClick);
     document.addEventListener('keydown', onPopupEscPress);
   };
 
@@ -27,15 +29,13 @@ window.popups = (function () {
     var errorPopup = template.querySelector('.error');
     main.appendChild(errorPopup);
     activePopup = errorPopup;
-    document.addEventListener('click', onPopupMouseLeftPressed);
+    document.addEventListener('click', onPopupClick);
     document.addEventListener('keydown', onPopupEscPress);
   };
 
-  var onPopupMouseLeftPressed = function (evt) {
-    if (window.utils.isMouseLeftPressed(evt)) {
-      if (evt.target.tagName !== 'P' || evt.target.classList.contains('error__button')) {
-        removePopup();
-      }
+  var onPopupClick = function (evt) {
+    if (evt.target.tagName !== MODAL_CONTENT_TAG || evt.target.classList.contains('error__button')) {
+      removePopup();
     }
   };
 
@@ -49,7 +49,7 @@ window.popups = (function () {
     activePopup.remove();
     activePopup = null;
     document.removeEventListener('keydown', onPopupEscPress);
-    document.removeEventListener('click', onPopupMouseLeftPressed);
+    document.removeEventListener('click', onPopupClick);
   };
 
   return {

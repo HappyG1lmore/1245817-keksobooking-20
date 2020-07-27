@@ -58,6 +58,7 @@ window.form = (function () {
     });
     adForm.classList.add('ad-form--disabled');
     window.filters.resetFilters();
+    window.photos.clearImages();
   };
 
   var setAddress = function (mainPinX, mainPinY) {
