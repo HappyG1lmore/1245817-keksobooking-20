@@ -6,6 +6,7 @@ window.filters = (function () {
   var DEBOUNCE_INTERVAL_FILTER = 500;
   var LOWER_PRICE = 10000;
   var UPPER_PRICE = 50000;
+  var ANY_OPTION = 'any';
 
   var filterForm = document.querySelector('.map__filters');
   var filtersSelect = filterForm.querySelectorAll('select');
@@ -15,6 +16,12 @@ window.filters = (function () {
   var typeFilter = filterForm.querySelector('#housing-type');
   var featuresFilter = filterForm.querySelector('#housing-features');
   var housingFeatures = filterForm.querySelectorAll('.map__checkbox');
+
+  var PriceLevels = {
+    LOW: 'low',
+    MIDDLE: 'middle',
+    HIGHT: 'high'
+  };
 
   var enableFilter = function () {
     filtersSelect.forEach(function (select) {
@@ -64,7 +71,7 @@ window.filters = (function () {
 
   var filterByType = function (advert) {
     var value = typeFilter.value;
-    if (value === 'any') {
+    if (value === ANY_OPTION) {
       return true;
     }
     return advert.offer.type === value;
@@ -73,11 +80,11 @@ window.filters = (function () {
   var filterByPrice = function (advert) {
     var value = priceFilter.value;
     switch (value) {
-      case 'low':
+      case PriceLevels.LOW:
         return advert.offer.price <= LOWER_PRICE;
-      case 'middle':
+      case PriceLevels.MIDDLE:
         return advert.offer.price >= LOWER_PRICE && advert.offer.price <= UPPER_PRICE;
-      case 'high':
+      case PriceLevels.HIGHT:
         return advert.offer.price >= UPPER_PRICE;
     }
     return true;
@@ -85,7 +92,7 @@ window.filters = (function () {
 
   var filterByRooms = function (advert) {
     var value = roomsFilter.value;
-    if (value === 'any') {
+    if (value === ANY_OPTION) {
       return true;
     }
     return advert.offer.rooms === Number(value);
@@ -93,7 +100,7 @@ window.filters = (function () {
 
   var filterByGuests = function (advert) {
     var value = guestsFilter.value;
-    if (value === 'any') {
+    if (value === ANY_OPTION) {
       return true;
     }
     return advert.offer.guests === Number(value);
