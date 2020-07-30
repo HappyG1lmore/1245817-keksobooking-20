@@ -25,6 +25,20 @@ window.form = (function () {
     'house': 5000
   };
 
+  var RoomsType = {
+    ONE: '1',
+    TWO: '2',
+    THREE: '3',
+    HUNDRED: '100'
+  };
+
+  var GuestType = {
+    ONE: '1',
+    TWO: '2',
+    THREE: '3',
+    NOT_FOR_GUEST: '0'
+  };
+
   adForm.addEventListener('change', function (evt) {
     switch (evt.target) {
       case rooms:
@@ -73,13 +87,13 @@ window.form = (function () {
 
   var validateCapacity = function () {
     var error = '';
-    if (rooms.value === '1' && capacity.value !== '1') {
+    if (rooms.value === RoomsType.ONE && capacity.value !== GuestType.ONE) {
       error = '1 комната только для 1-го гостя';
-    } else if (rooms.value === '2' && (capacity.value === '3' || capacity.value === '0')) {
+    } else if (rooms.value === RoomsType.TWO && (capacity.value === GuestType.THREE || capacity.value === GuestType.NOT_FOR_GUEST)) {
       error = '2 комнаты для 1-го или 2-ух гостей';
-    } else if (rooms.value === '3' && capacity.value === '0') {
+    } else if (rooms.value === RoomsType.THREE && capacity.value === GuestType.NOT_FOR_GUEST) {
       error = '3 комнаты для 1-го, 2-ух или 3-ех гостей';
-    } else if (rooms.value === '100' && capacity.value !== '0') {
+    } else if (rooms.value === RoomsType.HUNDRED && capacity.value !== GuestType.NOT_FOR_GUEST) {
       error = 'Это помещение не для гостей';
     }
     capacity.setCustomValidity(error);
